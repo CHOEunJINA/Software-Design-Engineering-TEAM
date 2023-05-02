@@ -13,7 +13,7 @@ import javax.swing.JPanel;
  */
 public class MoveToPostPage implements MoveBehavior{
     @Override
-    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel) {
+    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel, String query) {
       PostPage postPage = new PostPage(frame);
     }
 }

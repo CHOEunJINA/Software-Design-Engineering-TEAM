@@ -13,7 +13,7 @@ import javax.swing.JPanel;
  */
 public class MoveToSignInPage implements MoveBehavior{
     @Override
-    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel) {
+    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel, String query) {
       SignInPage signInPage = new SignInPage(frame);
     }
 }

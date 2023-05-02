@@ -11,7 +11,7 @@ import javax.swing.JPanel;
  */
 public class MoveToMainPage implements MoveBehavior{
     @Override
-    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel) {
+    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel, String query) {
       MainPage mainPage = new MainPage(frame);
     }
 }

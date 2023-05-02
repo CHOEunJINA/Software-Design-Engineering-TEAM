@@ -10,5 +10,5 @@ import javax.swing.JPanel;
  * @author bluev
  */
 public interface MoveBehavior {
-    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel);
+    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel, String query);
 }

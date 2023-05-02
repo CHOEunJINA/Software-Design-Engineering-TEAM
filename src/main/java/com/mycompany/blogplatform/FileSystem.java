@@ -28,11 +28,12 @@ class FileSystem {
       JSONParser parser = new JSONParser();
       try {
           Object obj = parser.parse(new FileReader("C:\\Users\\bluev\\NetBeansProjects\\BlogPlatform\\src\\main\\java\\com\\mycompany\\blogplatform\\data\\post.json"));
-          JSONArray jsonArr = (JSONArray) obj;
+          JSONObject jsonObj = (JSONObject) obj;
+          JSONArray jsonArr = (JSONArray)jsonObj.get("data");
           for (int i=0; i < 5; i++) { // 최신 글의 제목과 작성자를 가져온다.
             String temp = "";           
-            JSONObject jsonObj = (JSONObject)jsonArr.get(i);
-            temp = jsonObj.get("title") + " by " + jsonObj.get("username");
+            JSONObject jObj = (JSONObject)jsonArr.get(i);
+            temp = jsonObj.get("title") + " by " + jObj.get("username");
             list.add(temp);          
           }
       } catch (ParseException ex) {

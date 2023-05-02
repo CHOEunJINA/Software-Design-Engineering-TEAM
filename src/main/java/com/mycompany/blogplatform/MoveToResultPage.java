@@ -13,7 +13,7 @@ import javax.swing.JPanel;
  */
 public class MoveToResultPage implements MoveBehavior{
     @Override
-    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel) {
-      ResultPage resultPage = new ResultPage(frame);
+    public void moveTo(JFrame frame, JPanel menuPanel, JPanel contentPanel, String query) {
+      ResultPage resultPage = new ResultPage(frame, query);
     }
 }

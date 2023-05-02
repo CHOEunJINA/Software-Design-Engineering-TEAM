@@ -16,6 +16,7 @@ import javax.swing.JLabel;
  */
 public class MyPage extends Page {
     private JFrame receivedFrame;
+    private String query = "";
     public MyPage(JFrame receivedFrame) {
         this.receivedFrame = receivedFrame;
         menuPanel.setPreferredSize(new Dimension(menuPanelWidth, menuPanelHeight));
@@ -49,7 +50,7 @@ public class MyPage extends Page {
         } else if ("ResultPage".equals(page)) {
             setMoveBehavior(new MoveToResultPage());
         }
-        move(receivedFrame, menuPanel, contentPanel);
+        move(receivedFrame, menuPanel, contentPanel, query);
         menuPanel.updateUI();
         contentPanel.updateUI();
       }
