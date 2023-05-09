@@ -2,37 +2,44 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.blogplatform;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+package com.mycompany.blogplatform.View;
+
+import com.mycompany.blogplatform.Controller.MoveToMainPage;
+import com.mycompany.blogplatform.Controller.MoveToMyPage;
+import com.mycompany.blogplatform.Controller.MoveToPostPage;
+import com.mycompany.blogplatform.Controller.MoveToResultPage;
+import com.mycompany.blogplatform.Controller.MoveToSignInPage;
+import com.mycompany.blogplatform.View.Page;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author bluev
  */
-public class MyPage extends Page {
-    private JFrame receivedFrame;
-    private String query = "";
-    public MyPage(JFrame receivedFrame) {
-        this.receivedFrame = receivedFrame;
-        menuPanel.setPreferredSize(new Dimension(menuPanelWidth, menuPanelHeight));
+public class ResultPage extends Page{
+    private JFrame frame;
+    private JPanel menuPanel;
+    private JPanel contentPanel;
+
+    public ResultPage() {}
+    
+    public ResultPage(JPanel receivedMenuPanel, JPanel receivedContentPanel) {
+
+        menuPanel = receivedMenuPanel;
+        contentPanel = receivedContentPanel;
         
-        menuPanel.setLayout(new FlowLayout());
-   
         JButton mainPageButton = new JButton("MainPage");
         mainPageButton.addActionListener(new MoveActionListener());
+        JLabel label = new JLabel("test");
         
-
         menuPanel.add(mainPageButton);
-        
-        receivedFrame.add(menuPanel, "North");
-        receivedFrame.add(contentPanel, "South");
+        contentPanel.add(label);
     }
-    
     class MoveActionListener implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -50,7 +57,7 @@ public class MyPage extends Page {
         } else if ("ResultPage".equals(page)) {
             setMoveBehavior(new MoveToResultPage());
         }
-        move(receivedFrame, menuPanel, contentPanel, query);
+        move(menuPanel, contentPanel);
         menuPanel.updateUI();
         contentPanel.updateUI();
       }

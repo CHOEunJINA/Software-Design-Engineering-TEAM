@@ -5,6 +5,8 @@
 
 package com.mycompany.blogplatform;
 
+import com.mycompany.blogplatform.View.MainPage;
+
 /**
  *
  * @author bluev
