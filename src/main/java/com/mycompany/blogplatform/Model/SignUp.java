@@ -9,23 +9,24 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- *
- * @author bluev
+ * 회원가입을 위한 절차가 구현된 클래스
+ * @author 조은진
+ * 2023.5.11 "최적화" 강대한
  */
 public class SignUp {
-    private static final String UserData = "user_data.txt";
-    private static FileSystem instance_ = instance();
-    public static void saveSignUpInfo(String userID, String password, String name) {
+    private FileSystem instance_ = instance();
+    public void saveSignUpInfo(String userID, String password, String name) { //새로운 유저 정보 저장
         JSONArray jsonArr = instance_.getUser();
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("ID", userID);
         jsonObj.put("Password", password);
+        jsonObj.put("Name", name);
         jsonArr.add(jsonObj);
         instance_.setUser(jsonArr);
     }
 
     // 아이디 중복 체크 메서드
-    public static boolean checkDuplicateId(String userID) {
+    public boolean checkDuplicatedID(String userID) {
         boolean duplicated = false;
         JSONArray jsonArr = instance_.getUser();
 
@@ -37,4 +38,18 @@ public class SignUp {
         }
         return duplicated;
     }
+    
+    public boolean checkDuplicatedName(String userName) {
+        boolean duplicated = false;
+        JSONArray jsonArr = instance_.getUser();
+
+        for (Object obj : jsonArr) {
+            JSONObject jsonObj = (JSONObject) obj;
+            if (jsonObj.get("Name").equals(userName)) {
+                duplicated = true;
+            }
+        }
+        return duplicated;
+    }
+    
 }

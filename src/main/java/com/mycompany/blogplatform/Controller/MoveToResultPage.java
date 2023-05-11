@@ -4,14 +4,13 @@
  */
 package com.mycompany.blogplatform.Controller;
 
-import com.mycompany.blogplatform.Controller.MoveBehavior;
 import com.mycompany.blogplatform.View.ResultPage;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
- *
- * @author bluev
+ * 전략 패턴의 구현된 전략
+ * @author 강대한
+ * 2023.5.11 "최적화" 강대한
  */
 public class MoveToResultPage implements MoveBehavior{
     @Override

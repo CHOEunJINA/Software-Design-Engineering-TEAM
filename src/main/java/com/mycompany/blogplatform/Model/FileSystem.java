@@ -1,7 +1,8 @@
 package com.mycompany.blogplatform.Model;
 /**
- *
- * @author bluev
+ * 싱글턴 패턴을 적용한 데이터 입출력을 관리하는 클래스
+ * @author 강대한
+ * 2023.5.11 "최적화" 강대한
  */
 import org.json.simple.parser.ParseException;
 import org.json.simple.parser.JSONParser;
@@ -10,39 +11,50 @@ import org.json.simple.JSONObject;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import org.json.simple.JSONArray;
 
 public class FileSystem {
-  public static FileSystem instance() { //싱글턴 패턴을 적용하여 객체를 하나만 생성되게 생성자를 private으로 해두고 정적 함수로 객체가 생성되어 있는지 확인 후 생성
+  public static FileSystem instance() { //싱글턴 패턴을 적용하여 객체를 하나만 생성되게 생성자를 private으로 해두고 객체를 이른 초기화로 생성, 정적 메서드를 통해 객체 반환
       return instance_;
   }
   private static FileSystem instance_ = new FileSystem();
   
-  private String query;
+  private static String postFile = "src\\main\\java\\com\\mycompany\\blogplatform\\data\\post.json"; // 작성된 글 데이터
+  private static String userFile = "src\\main\\java\\com\\mycompany\\blogplatform\\data\\user.json"; // 유저 데이터
   private FileSystem() {}
-  public void setQuery(String receivedQuery) {
-      query = receivedQuery;
-  }
-  public static Object getPost() {
+
+  public static JSONArray getPost() {
       JSONParser parser = new JSONParser();
       Object obj = new Object();
+      JSONArray jsonArr = new JSONArray();
       try {
-          obj = parser.parse(new FileReader("C:\\Users\\bluev\\NetBeansProjects\\BlogPlatform\\src\\main\\java\\com\\mycompany\\blogplatform\\data\\post.json")); //Json 파일로 저장된 글 가져오기        
+          obj = parser.parse(new FileReader(postFile, Charset.forName("utf-8"))); //Json 파일로 저장된 글 가져오기
+          JSONObject jsonObj = (JSONObject) obj;
+          jsonArr = (JSONArray)jsonObj.get("data");
       } catch (ParseException ex) {
             ex.printStackTrace();
       } catch (IOException e) {
             e.printStackTrace();
       }
-      return obj;
+      return jsonArr;
   }
-  public static void setPost() {
+  public static void setPost(JSONArray jsonArr) {
+      try {
+          FileWriter file = new FileWriter(postFile, Charset.forName("utf-8"));
+          file.write(jsonArr.toJSONString());
+          file.flush();
+          file.close();
+      } catch (IOException e) {
+          e.printStackTrace();
+      }
   }
   public static JSONArray getUser() {
       Object obj = new Object();
       JSONParser parser = new JSONParser();
       JSONArray jsonArr = new JSONArray();
       try {
-          FileReader reader = new FileReader("C:\\Users\\bluev\\NetBeansProjects\\BlogPlatform\\src\\main\\java\\com\\mycompany\\blogplatform\\data\\user.json");
+          FileReader reader = new FileReader(userFile, Charset.forName("utf-8"));
           obj = parser.parse(reader);
           JSONObject jsonObj = (JSONObject) obj;
           jsonArr = (JSONArray)jsonObj.get("data");
@@ -56,7 +68,7 @@ public class FileSystem {
   }
   public static void setUser(JSONArray jsonArr) {
       try {
-          FileWriter file = new FileWriter("C:\\Users\\bluev\\NetBeansProjects\\BlogPlatform\\src\\main\\java\\com\\mycompany\\blogplatform\\data\\user.json");
+          FileWriter file = new FileWriter(userFile, Charset.forName("utf-8"));
           file.write(jsonArr.toJSONString());
           file.flush();
           file.close();

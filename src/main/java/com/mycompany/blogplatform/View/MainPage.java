@@ -19,7 +19,11 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JTextField;
 
-
+/**
+ * 메인 화면 GUI
+ * @author 강대한
+ * 2023.5.11 "최적화" 강대한
+ */
 public class MainPage extends Page {
   private JButton mypage_button;
   private JButton postpage_button;
@@ -63,7 +67,7 @@ public class MainPage extends Page {
         
         List<String> titles = post.getLatestPost();
         contentPanel.setLayout(new GridLayout(row, col));
-        for (String title : titles) {
+        for (String title : titles) { //최신 글 배치
             JLabel label = new JLabel(title);
             contentPanel.add(label);
         }
@@ -113,12 +117,10 @@ public class MainPage extends Page {
             contentPanel.add(label);
         }
   }
-  class MoveActionListener implements ActionListener { //페이지 이동이나 검색 버튼을 클릭했을 때 실행됨
+  class MoveActionListener implements ActionListener { //페이지 이동이나 검색 버튼을 클릭했을 때 어느 행동을 수행할지 결정
       @Override
       public void actionPerformed(ActionEvent e) {
         String page = e.getActionCommand();
-        menuPanel.removeAll();
-        contentPanel.removeAll();
 
         if ("MainPage".equals(page)) {
             setMoveBehavior(new MoveToMainPage());
@@ -143,11 +145,13 @@ public class MainPage extends Page {
             setMoveBehavior(new MoveToMainPage());
         } else if ("🔍".equals(page)) {
             String query = searchBox.getText();
-            instance_.setQuery(query);
+            //instance_.setQuery(query);
             setMoveBehavior(new MoveToResultPage());
         } 
+        menuPanel.removeAll(); // 기존 페이지 지우기
+        contentPanel.removeAll();
         move(menuPanel, contentPanel);
-        menuPanel.updateUI();
+        menuPanel.updateUI(); // 이동한 페이지 출력
         contentPanel.updateUI();
       }
     }

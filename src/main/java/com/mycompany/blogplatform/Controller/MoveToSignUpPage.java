@@ -7,8 +7,9 @@ import com.mycompany.blogplatform.View.SignUpPage;
 import javax.swing.JPanel;
 
 /**
- *
- * @author bluev
+ * 전략 패턴의 구현된 전략
+ * @author 강대한
+ * 2023.5.11 "최적화" 강대한
  */
 public class MoveToSignUpPage implements MoveBehavior{
     @Override

@@ -4,6 +4,7 @@
  */
 package com.mycompany.blogplatform.View;
 
+import com.mycompany.blogplatform.CharToString;
 import com.mycompany.blogplatform.Controller.MoveToMainPage;
 import com.mycompany.blogplatform.Controller.MoveToSignUpPage;
 import com.mycompany.blogplatform.Model.SignIn;
@@ -20,11 +21,12 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 /**
- *
- * @author bluev
+ * 로그인 페이지 GUI
+ * @author 조은진
+ * 2023.5.11 "최적화" 강대한
  */
 public class SignInPage extends Page{
-    private SignIn signIn = new SignIn();
+    private SignIn signIn;
     private JFrame frame;
     private JPanel menuPanel;
     private JPanel contentPanel;
@@ -43,7 +45,8 @@ public class SignInPage extends Page{
     public SignInPage() {}
     
     public SignInPage(JPanel receivedMenuPanel, JPanel receivedContentPanel) {
-
+        signIn = new SignIn();
+        
         menuPanel = receivedMenuPanel;
         contentPanel = receivedContentPanel;
         formPanel = new JPanel();
@@ -77,27 +80,30 @@ public class SignInPage extends Page{
         
         contentPanel.add(formPanel);
     }
-    class MoveActionListener implements ActionListener {
+    class MoveActionListener implements ActionListener { //페이지 이동이나 검색 버튼을 클릭했을 때 어느 행동을 수행할지 결정
       @Override
       public void actionPerformed(ActionEvent e) {
         String page = e.getActionCommand();
-        menuPanel.removeAll();
-        contentPanel.removeAll();
+        
         if ("MainPage".equals(page)) {
             setMoveBehavior(new MoveToMainPage());
         } else if ("회원가입".equals(page)) {
             setMoveBehavior(new MoveToSignUpPage());
         } 
+        menuPanel.removeAll();
+        contentPanel.removeAll();
         move(menuPanel, contentPanel);
         menuPanel.updateUI();
         contentPanel.updateUI();
       }
     }
-    class SignInActionListener implements ActionListener {
+    class SignInActionListener implements ActionListener { //로그인 절차 수행
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (signIn.authenticate(idField.getText(), pwField.getPassword())) {
-                user = idField.getText();
+            String pwd = CharToString.charToString(pwField.getPassword());
+            String id = idField.getText().trim(); // 공백을 없게 하여 비정상적인 로그인 차단
+            if (signIn.authenticate(id, pwd)) {
+                user = SignIn.name;
                 menuPanel.removeAll();
                 contentPanel.removeAll();
                 setMoveBehavior(new MoveToMainPage());

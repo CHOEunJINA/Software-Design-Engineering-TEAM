@@ -9,25 +9,22 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- *
- * @author bluev
+ * 로그인을 위한 절차가 구현된 클래스
+ * @author 조은진
+ * 2023.5.11 "최적화" 강대한
  */
 public class SignIn {
-    private static final String LoginUser = "users.txt";
+    public static String name = "";
     private FileSystem instance_ = instance();
 
-    public boolean authenticate(String username, char[] password) {
+    public boolean authenticate(String username, String password) {
         boolean authenticated = false;
-        String pwd = "";
-        for (char cha : password) {
-            Character.toString(cha);
-            pwd += (pwd.equals("")) ? ""+cha+"" : ""+cha+"";
-        }
         JSONArray jsonArr = instance_.getUser();
         for (Object obj : jsonArr) {
             JSONObject jsonObj = (JSONObject) obj;
-            if (jsonObj.get("ID").equals(username) && jsonObj.get("Password").equals(pwd)) {
+            if (jsonObj.get("ID").equals(username) && jsonObj.get("Password").equals(password)) { //유저 정보 확인
                 authenticated = true;
+                name = (String)jsonObj.get("Name"); //로그인된 유저 이름 저장
             }
         }
         return authenticated;

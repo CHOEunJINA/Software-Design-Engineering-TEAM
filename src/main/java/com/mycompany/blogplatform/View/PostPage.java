@@ -9,7 +9,6 @@ import com.mycompany.blogplatform.Controller.MoveToMyPage;
 import com.mycompany.blogplatform.Controller.MoveToPostPage;
 import com.mycompany.blogplatform.Controller.MoveToResultPage;
 import com.mycompany.blogplatform.Controller.MoveToSignInPage;
-import com.mycompany.blogplatform.View.Page;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -17,8 +16,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 /**
- *
- * @author bluev
+ * 글 작성 페이지 GUI
+ * @author 강대한
+ * 2023.5.11 "최적화" 강대한
  */
 public class PostPage extends Page{
     private JFrame frame;
@@ -39,23 +39,20 @@ public class PostPage extends Page{
         menuPanel.add(mainPageButton);
         contentPanel.add(label);
     }
-    class MoveActionListener implements ActionListener {
+    class MoveActionListener implements ActionListener { //페이지 이동이나 검색 버튼을 클릭했을 때 어느 행동을 수행할지 결정
       @Override
       public void actionPerformed(ActionEvent e) {
         String page = e.getActionCommand();
-        menuPanel.removeAll();
-        contentPanel.removeAll();
+        
         if ("MainPage".equals(page)) {
             setMoveBehavior(new MoveToMainPage());
         } else if ("MyPage".equals(page)) {
             setMoveBehavior(new MoveToMyPage());
-        } else if ("PostPage".equals(page)) {
-            setMoveBehavior(new MoveToPostPage());
-        } else if ("SignInPage".equals(page)) {
-            setMoveBehavior(new MoveToSignInPage());
         } else if ("ResultPage".equals(page)) {
             setMoveBehavior(new MoveToResultPage());
         }
+        menuPanel.removeAll();
+        contentPanel.removeAll();
         move(menuPanel, contentPanel);
         menuPanel.updateUI();
         contentPanel.updateUI();

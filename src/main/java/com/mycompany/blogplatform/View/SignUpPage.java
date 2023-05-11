@@ -4,7 +4,9 @@
  */
 package com.mycompany.blogplatform.View;
 
+import com.mycompany.blogplatform.CharToString;
 import com.mycompany.blogplatform.Controller.MoveToMainPage;
+import com.mycompany.blogplatform.Controller.MoveToSignInPage;
 import com.mycompany.blogplatform.Model.SignUp;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -20,11 +22,11 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 /**
- *
- * @author bluev
+ * 회원가입 페이지 GUI
+ * @author 조은진
+ * 2023.5.11 "최적화" 강대한
  */
 public class SignUpPage extends Page {
-    private SignUp signUp = new SignUp();
     private JPanel menuPanel;
     private JPanel contentPanel;
     private JPanel formPanel;
@@ -46,9 +48,12 @@ public class SignUpPage extends Page {
     
     private JButton signUpButton;
     private JButton cancelButton;
+    
+    private SignUp signUp;
     public SignUpPage() {
     }
     public SignUpPage(JPanel receivedMenuPanel, JPanel receivedContentPanel) {
+        signUp = new SignUp();
         menuPanel = receivedMenuPanel;
         contentPanel = receivedContentPanel;
         formPanel = new JPanel();
@@ -77,7 +82,7 @@ public class SignUpPage extends Page {
         
         // 이름 확인 필드
         nameLabel = new JLabel("이름");
-        nameField = new JPasswordField(17);
+        nameField = new JTextField(17);
         formPanel.add(nameLabel);
         formPanel.add(nameField);
         
@@ -108,19 +113,32 @@ public class SignUpPage extends Page {
     class MoveActionListener implements ActionListener {
       @Override
       public void actionPerformed(ActionEvent e) {
-        String page = e.getActionCommand();
+        setMoveBehavior(new MoveToMainPage());
         menuPanel.removeAll();
         contentPanel.removeAll();
-        setMoveBehavior(new MoveToMainPage());
         move(menuPanel, contentPanel);
         menuPanel.updateUI();
         contentPanel.updateUI();
       }
     }
-    class SignUpActionListener implements ActionListener {
+    class SignUpActionListener implements ActionListener { //회원가입 절차 수행
         @Override
         public void actionPerformed(ActionEvent e) {
-            
+            String user = idTextField.getText();
+            String pwd1 = CharToString.charToString(pwField.getPassword());
+            String pwd2 = CharToString.charToString(pwConfirmField.getPassword());
+            String name = nameField.getText();
+            if ((!signUp.checkDuplicatedID(user)) && pwd1.equals(pwd2)) {
+                if (!signUp.checkDuplicatedName(name)) {
+                    signUp.saveSignUpInfo(user, pwd1, name);
+                    menuPanel.removeAll();
+                    contentPanel.removeAll();
+                    setMoveBehavior(new MoveToSignInPage());
+                    move(menuPanel, contentPanel);
+                    menuPanel.updateUI();
+                    contentPanel.updateUI();
+                }
+            }
         }
     }
 }
