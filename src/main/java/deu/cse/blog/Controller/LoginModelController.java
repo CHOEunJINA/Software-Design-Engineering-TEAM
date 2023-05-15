@@ -7,8 +7,10 @@ package deu.cse.blog.Controller;
 import deu.cse.blog.Model.LoginModel;
 
 /**
- *
- * @author bluev
+ * 전략 패턴의 구상 클래스
+ * @author 강대한
+ * @
+ * 2023.5.15 "생성" 강대한
  */
 public class LoginModelController implements UserModelController{
     private LoginModel loginModel = new LoginModel();

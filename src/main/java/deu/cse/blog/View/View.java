@@ -48,7 +48,7 @@ public class View extends JFrame{
   public void setViewController(ViewController vc) { 
       viewController = vc;
   }
-  
+  //어떤 컨트롤러를 사용할지 설정
   public void setUserModelController(UserModelController umc) { 
       userModelController = umc;
   }

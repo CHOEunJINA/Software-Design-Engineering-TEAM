@@ -25,6 +25,7 @@ import javax.swing.JTextField;
  * 로그인 페이지 GUI
  * @author 조은진
  * 2023.5.11 "최적화" 강대한
+ * 2023.5.16 "버튼 이름을 한글로 바꿈" 강대한
  */
 public class LoginView extends View{
     private JFrame frame;
@@ -52,13 +53,13 @@ public class LoginView extends View{
         
         menuPanel.setPreferredSize(new Dimension(menuPanelWidth, menuPanelHeight));
         formPanel.setPreferredSize(new Dimension(formPanelWidth, formPanelHeight));
-        JButton mainPageButton = new JButton("MainPage");
+        JButton mainPageButton = new JButton("블로그홈");
         mainPageButton.addActionListener(new MoveActionListener());
         
-        idLabel = new JLabel("ID");
+        idLabel = new JLabel("아이디");
         idLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         idField = new JTextField(15);
-        pwLabel = new JLabel("Password");
+        pwLabel = new JLabel("비밀번호");
         pwLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         pwField = new JPasswordField(15);
 
@@ -83,7 +84,7 @@ public class LoginView extends View{
       public void actionPerformed(ActionEvent e) {
         String page = e.getActionCommand();
         
-        if ("MainPage".equals(page)) {
+        if ("블로그홈".equals(page)) {
             setViewController(new MainViewController());
         } else if ("회원가입".equals(page)) {
             setViewController(new SignupViewController());

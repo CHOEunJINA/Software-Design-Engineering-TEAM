@@ -9,7 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- * 회원 탈퇴를 구현한 클래스
+ * 회원 탈퇴를 구현한 모델
  * @author 강대한
  * 2023.5.11 "deleteUser 구현" 강대한
  */

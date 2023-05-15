@@ -9,7 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- * 회원가입을 위한 절차가 구현된 클래스
+ * 회원가입을 위한 절차가 구현된 모델
  * @author 조은진
  * 2023.5.11 "최적화" 강대한
  */

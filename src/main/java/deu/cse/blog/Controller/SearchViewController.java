@@ -8,8 +8,10 @@ import deu.cse.blog.View.SearchView;
 import javax.swing.JPanel;
 
 /**
- *
- * @author bluev
+ * 전략 패턴의 구상 클래스
+ * @author 강대한
+ * @
+ * 2023.5.15 "생성" 강대한
  */
 public class SearchViewController implements ViewController {
     @Override

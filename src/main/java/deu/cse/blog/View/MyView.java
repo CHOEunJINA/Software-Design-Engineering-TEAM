@@ -18,6 +18,7 @@ import javax.swing.JLabel;
  * 마이 페이지 GUI
  * @author 강대한
  * 2023.5.11 "최적화" 강대한
+ * 2023.5.16 "버튼 이름을 한글로 바꿈" 강대한
  */
 public class MyView extends View {
     private JFrame frame;
@@ -31,7 +32,7 @@ public class MyView extends View {
         menuPanel = receivedMenuPanel;
         contentPanel = receivedContentPanel;
 
-        JButton mainPageButton = new JButton("MainPage");
+        JButton mainPageButton = new JButton("블로그홈");
         mainPageButton.addActionListener(new MoveActionListener());
         JLabel label = new JLabel("test");
         
@@ -45,11 +46,11 @@ public class MyView extends View {
       public void actionPerformed(ActionEvent e) {
         String page = e.getActionCommand();
         
-        if ("MainPage".equals(page)) {
+        if ("블로그홈".equals(page)) {
             setViewController(new MainViewController());
-        } else if ("PostPage".equals(page)) {
+        } else if ("글쓰기".equals(page)) {
             setViewController(new PostViewController());
-        } else if ("ResultPage".equals(page)) {
+        } else if ("🔍".equals(page)) {
             setViewController(new SearchViewController());
         } 
         menuPanel.removeAll();

@@ -11,8 +11,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- *
- * @author bluev
+ * 최신 글 가져오기를 구현한 모델
+ * @author 강대한
+ * 2023.5.11 "생성" 강대한
  */
 public class LatestPostModel {
     private Model instance_ = instance();
