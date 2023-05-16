@@ -1,94 +1,120 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package deu.cse.blog.View;
 
+import deu.cse.blog.CharToString;
+import deu.cse.blog.Controller.LoginModelController;
+import deu.cse.blog.Controller.MainViewController;
+import deu.cse.blog.Controller.SignupViewController;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 /**
- *
- * @author a4424
+ * 로그인 페이지 GUI
+ * @author 조은진
+ * 2023.5.11 "최적화" 강대한
+ * 2023.5.16 "버튼 이름을 한글로 바꿈" 강대한
  */
-import deu.cse.blog.Controller.LoginController;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
-public class LoginView extends JFrame implements ActionListener {
-
-    private LoginController controller;
+public class LoginView extends View{
+    private JFrame frame;
+    private JPanel menuPanel;
+    private JPanel contentPanel;
+    private JPanel formPanel;
     private JTextField idField;
     private JPasswordField pwField;
-    private JLabel messageLabel;
-
-    public LoginView() {
-        this.controller = controller;
-
-        setTitle("로그인");
-        setSize(100,200);
+    private JLabel idLabel;
+    private JLabel pwLabel;
+    private JButton signInButton;
+    private JButton signUpButton;
+    private int formPanelHeight = 100;
+    private int formPanelWidth = 200;
+    private int menuPanelHeight = 50;
+    
+    public LoginView() {}
+    
+    public LoginView(JPanel receivedMenuPanel, JPanel receivedContentPanel) {
+        menuPanel = receivedMenuPanel;
+        contentPanel = receivedContentPanel;
+        formPanel = new JPanel();
+        formPanel.setLayout(new GridLayout(4, 2));
+        contentPanel.setLayout(new FlowLayout());
         
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // 로그인 폼을 위한 컴포넌트 생성
-        JPanel formPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,20,15));
-        JLabel idLabel = new JLabel("아이디");
+        menuPanel.setPreferredSize(new Dimension(menuPanelWidth, menuPanelHeight));
+        formPanel.setPreferredSize(new Dimension(formPanelWidth, formPanelHeight));
+        JButton mainPageButton = new JButton("블로그홈");
+        mainPageButton.addActionListener(new MoveActionListener());
+        
+        idLabel = new JLabel("아이디");
         idLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         idField = new JTextField(15);
-        JLabel pwLabel = new JLabel("비밀번호");
+        pwLabel = new JLabel("비밀번호");
         pwLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         pwField = new JPasswordField(15);
+
+        signInButton = new JButton("로그인");
+        signUpButton = new JButton("회원가입");
+        
+        signInButton.addActionListener(new LoginActionListener());
+        signUpButton.addActionListener(new MoveActionListener());
+        
+        menuPanel.add(mainPageButton);
         formPanel.add(idLabel);
         formPanel.add(idField);
         formPanel.add(pwLabel);
         formPanel.add(pwField);
-
-        // 로그인 버튼 생성
-        JButton loginButton = new JButton("로그인");
-        loginButton.addActionListener(this);
-
-        // 메시지 표시 레이블 생성
-        messageLabel = new JLabel("");
-        messageLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        messageLabel.setForeground(Color.RED);
-
-        // 레이아웃 설정 및 컴포넌트 추가
-        JPanel contentPane = new JPanel(new BorderLayout(15, 10));
-        contentPane.add(formPanel, BorderLayout.CENTER);
-        contentPane.setBackground(Color.WHITE);
-        JPanel buttonPanel = new JPanel(new BorderLayout(10, 10));
-        buttonPanel.add(loginButton, BorderLayout.WEST);
-        buttonPanel.add(messageLabel, BorderLayout.CENTER);
-        contentPane.add(buttonPanel, BorderLayout.SOUTH);
+        formPanel.add(signInButton);
+        formPanel.add(signUpButton);
         
-
-        setContentPane(contentPane);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        contentPanel.add(formPanel);
     }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("로그인")) {
-            String id = idField.getText();
-            String pw = new String(pwField.getPassword());
-            controller.login(id, pw);
+    class MoveActionListener implements ActionListener { //페이지 이동이나 검색 버튼을 클릭했을 때 어느 행동을 수행할지 결정
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        String page = e.getActionCommand();
+        
+        if ("블로그홈".equals(page)) {
+            setViewController(new MainViewController());
+        } else if ("회원가입".equals(page)) {
+            setViewController(new SignupViewController());
+        } 
+        menuPanel.removeAll();
+        contentPanel.removeAll();
+        viewController.move(menuPanel, contentPanel);
+        menuPanel.updateUI();
+        contentPanel.updateUI();
+      }
+    }
+    class LoginActionListener implements ActionListener { //로그인 절차 수행
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String pwd = CharToString.charToString(pwField.getPassword());
+            String id = idField.getText().trim(); // 공백을 없게 하여 비정상적인 로그인 차단
+            setUserModelController(new LoginModelController());
+            String name = userModelController.action(id, pwd, "", true);
+            if (!name.equals("")) {
+                JOptionPane.showMessageDialog(getContentPane(), "로그인 성공!");
+                user = name;
+                menuPanel.removeAll();
+                contentPanel.removeAll();
+                setViewController(new MainViewController());
+                viewController.move(menuPanel, contentPanel);
+                menuPanel.updateUI();
+                contentPanel.updateUI();
+            } else {
+                JOptionPane.showMessageDialog(getContentPane(), "로그인 실패!");
+            }
         }
     }
-
-    public void showMessage(String message) {
-        messageLabel.setText(message);
-    }
-
-
-    public String getUsername() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public String getPassword() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-  
 }
