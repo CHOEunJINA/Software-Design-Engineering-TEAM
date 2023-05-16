@@ -132,7 +132,7 @@ public class SignupView extends View {
             setUserModelController(new SignupModelController());
             boolean gender = maleButton.isSelected();
             //확인 패스워드와 같은지, 아이디, 패스워드, 이름이 공백이 아닌지 체크
-            if (pwd1.equals(pwd2) && !id.equals("") && pwd1.equals("") && name.equals("")) {
+            if (pwd1.equals(pwd2) && (!id.equals("")) && (!pwd1.equals("")) && (!name.equals(""))) {
                 String user = userModelController.action(id, pwd1, name, gender);
                 if (!user.equals("")) {
                     String message = user + "님 환영합니다!";

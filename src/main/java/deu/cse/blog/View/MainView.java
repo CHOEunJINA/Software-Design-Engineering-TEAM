@@ -10,6 +10,7 @@ import deu.cse.blog.Controller.MainViewController;
 import deu.cse.blog.Controller.MyViewController;
 import deu.cse.blog.Controller.PostViewController;
 import deu.cse.blog.Controller.SearchViewController;
+import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -40,13 +41,14 @@ public class MainView extends View {
   private JFrame frame;
   private JPanel menuPanel;
   private JPanel contentPanel;
+  private JPanel searchPanel;
   private JLabel userLabel;
 
   public MainView() { //처음 메인 페이지를 보여줄 때
         frame = initFrame;
         menuPanel = initMenuPanel;
         contentPanel = initContentPanel;
-        
+        searchPanel = new JPanel();
         menuPanel.setPreferredSize(new Dimension(menuPanelWidth, menuPanelHeight));
         contentPanel.setPreferredSize(new Dimension(contentPanelWidth, contentPanelHeight));
         mypage_button = new JButton("내블로그");
@@ -55,14 +57,15 @@ public class MainView extends View {
         
         searchBox = new JTextField(50); //검색창
         searchButton = new JButton("🔍");
-        searchBox.setText("검색어를 입력하시오 ");
+        searchBox.setText("");
         
+        searchPanel.add(searchBox);
+        searchPanel.add(searchButton);
         menuPanel.setLayout(new FlowLayout());
         menuPanel.add(mypage_button);
         menuPanel.add(postpage_button);
         menuPanel.add(login_button);
-        menuPanel.add(searchBox);
-        menuPanel.add(searchButton);
+        menuPanel.add(searchPanel, BorderLayout.SOUTH);
         
         mypage_button.addActionListener(new MoveActionListener());
         postpage_button.addActionListener(new MoveActionListener());
@@ -83,7 +86,8 @@ public class MainView extends View {
   public MainView(JPanel receivedMenuPanel, JPanel receivedContentPanel) { // 다른 페이지에서 메인 페이지로 돌아올 때
         menuPanel = receivedMenuPanel;
         contentPanel = receivedContentPanel;
-     
+        searchPanel = new JPanel();
+        
         menuPanel.setPreferredSize(new Dimension(menuPanelWidth, menuPanelHeight));
         
         mypage_button = new JButton("내블로그");
@@ -91,11 +95,14 @@ public class MainView extends View {
         login_button = new JButton("로그인");
         signOutButton = new JButton("로그아웃");
         
-        userLabel = new JLabel(user);
+        String username = user + "님";
+        userLabel = new JLabel(username);
         searchBox = new JTextField(50); //검색창
         searchButton = new JButton("🔍");
-        searchBox.setText("검색어를 입력하시오 ");
+        searchBox.setText("");
         
+        searchPanel.add(searchBox);
+        searchPanel.add(searchButton);
         menuPanel.setLayout(new FlowLayout());
         menuPanel.add(mypage_button);
         menuPanel.add(postpage_button);
@@ -106,8 +113,7 @@ public class MainView extends View {
                 menuPanel.add(userLabel);
                 menuPanel.add(signOutButton);
             }
-        menuPanel.add(searchBox);
-        menuPanel.add(searchButton);
+        menuPanel.add(searchPanel, BorderLayout.SOUTH);
         
         mypage_button.addActionListener(new MoveActionListener());
         postpage_button.addActionListener(new MoveActionListener());
