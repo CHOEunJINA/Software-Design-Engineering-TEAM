@@ -13,5 +13,5 @@ import javax.swing.JPanel;
  * 2023.5.15 "생성" 강대한
  */
 public interface ViewController {
-    public abstract void move(JPanel menuPanel, JPanel contentPanel); 
+    abstract void move(JPanel menuPanel, JPanel contentPanel); 
 }

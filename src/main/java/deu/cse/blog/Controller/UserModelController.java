@@ -11,5 +11,5 @@ package deu.cse.blog.Controller;
  * 2023.5.15 "생성" 강대한
  */
 public interface UserModelController {  
-    public abstract String action(String id, String pw, String name, boolean gender);
+    abstract String action(String id, String pw, String name, boolean gender);
 }

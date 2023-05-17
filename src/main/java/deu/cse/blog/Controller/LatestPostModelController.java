@@ -13,13 +13,11 @@ import java.util.List;
  * @
  * 2023.5.15 "생성" 강대한
  */
-public class LatestPostModelController implements PostModelController {
+public class LatestPostModelController implements GetPostModelController {
+    @Override
     public List<String> getPost() {
         LatestPostModel latestPostModel = new LatestPostModel();
         List<String> list = latestPostModel.getLatestPost();
         return list;
-    }
-    public boolean setPost() {
-        return true;
     }
 }

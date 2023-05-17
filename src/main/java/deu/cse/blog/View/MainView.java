@@ -72,8 +72,8 @@ public class MainView extends View {
         login_button.addActionListener(new MoveActionListener());
         searchButton.addActionListener(new MoveActionListener());
         
-        setPostModelController(new LatestPostModelController()); //최신 글 가져오기
-        List<String> titles = postModelController.getPost();
+        setGetPostModelController(new LatestPostModelController()); //최신 글 가져오기
+        List<String> titles = getPostModelController.getPost();
         contentPanel.setLayout(new GridLayout(row, col));
         for (String title : titles) { //최신 글 배치
             JLabel label = new JLabel(title);
@@ -121,8 +121,8 @@ public class MainView extends View {
         signOutButton.addActionListener(new MoveActionListener());
         searchButton.addActionListener(new MoveActionListener());
         
-        setPostModelController(new LatestPostModelController());
-        List<String> titles = postModelController.getPost();
+        setGetPostModelController(new LatestPostModelController());
+        List<String> titles = getPostModelController.getPost();
         contentPanel.setLayout(new GridLayout(row, col));
         for (String title : titles) {
             JLabel label = new JLabel(title);

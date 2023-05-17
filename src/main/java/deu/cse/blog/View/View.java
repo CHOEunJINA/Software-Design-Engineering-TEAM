@@ -4,7 +4,8 @@
  */
 package deu.cse.blog.View;
 
-import deu.cse.blog.Controller.PostModelController;
+import deu.cse.blog.Controller.GetPostModelController;
+import deu.cse.blog.Controller.SetPostModelController;
 import deu.cse.blog.Controller.UserModelController;
 import deu.cse.blog.Controller.ViewController;
 import javax.swing.JFrame;
@@ -20,16 +21,17 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 public class View extends JFrame{
   protected ViewController viewController;
   protected UserModelController userModelController;
-  protected PostModelController postModelController;
+  protected SetPostModelController setPostModelController;
+  protected GetPostModelController getPostModelController;
   protected JFrame initFrame;
   protected JPanel initMenuPanel;
   protected JPanel initContentPanel;
   protected int pageHeight = 600;
   protected int pageWidth = 800;
-  protected int menuPanelHeight = 100;
-  protected int menuPanelWidth = 700;
-  protected int contentPanelHeight = pageHeight - menuPanelHeight;
-  protected int contentPanelWidth = 700;
+  protected int menuPanelHeight = 80;
+  protected int menuPanelWidth = 800;
+  protected int contentPanelHeight = pageHeight - menuPanelHeight - 30;
+  protected int contentPanelWidth = 800;
   protected static String user = ""; //로그인된 유저 이름
   
   public View() {
@@ -53,7 +55,11 @@ public class View extends JFrame{
       userModelController = umc;
   }
   
-  public void setPostModelController(PostModelController pmc) { 
-      postModelController = pmc;
+  public void setSetPostModelController(SetPostModelController spmc) { 
+      setPostModelController = spmc;
+  }
+  
+  public void setGetPostModelController(GetPostModelController gpmc) { 
+      getPostModelController = gpmc;
   }
 }

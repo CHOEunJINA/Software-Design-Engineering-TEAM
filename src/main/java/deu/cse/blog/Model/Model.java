@@ -29,17 +29,18 @@ public class Model {
   private Model() {}
 
   public static JSONArray getPost() {
-      JSONParser parser = new JSONParser();
       Object obj = new Object();
+      JSONParser parser = new JSONParser();
       JSONArray jsonArr = new JSONArray();
       try {
-          obj = parser.parse(new FileReader(postFile, Charset.forName("utf-8"))); //Json 파일로 저장된 글 가져오기
-          JSONObject jsonObj = (JSONObject) obj;
-          jsonArr = (JSONArray)jsonObj.get("data");
-      } catch (ParseException ex) {
-            ex.printStackTrace();
-      } catch (IOException e) {
-            e.printStackTrace();
+          FileReader reader = new FileReader(postFile, Charset.forName("utf-8"));
+          obj = parser.parse(reader);
+          jsonArr = (JSONArray) obj;
+          reader.close();
+      } catch (IOException e){
+          e.printStackTrace();
+      } catch (ParseException e) {
+          e.printStackTrace();
       }
       return jsonArr;
   }

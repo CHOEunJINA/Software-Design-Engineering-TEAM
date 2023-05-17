@@ -25,7 +25,7 @@ public class LatestPostModel {
       for (int i=1; i <= 5; i++) { // 최신 글의 제목과 작성자를 가져온다.
         String temp = "";           
         JSONObject jsonObj = (JSONObject)jsonArr.get(jsonArr.size() - i);
-        temp = jsonObj.get("title") + " by " + jsonObj.get("username");
+        temp = jsonObj.get("Title") + " by " + jsonObj.get("User");
         list.add(temp);
       }
       return list;
