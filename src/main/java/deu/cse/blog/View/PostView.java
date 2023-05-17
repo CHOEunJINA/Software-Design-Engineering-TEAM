@@ -99,6 +99,7 @@ public class PostView extends View{
             boolean success = setPostModelController.setPost(title, post, user);
             if (success) {
                 setViewController(new MainViewController());
+                JOptionPane.showMessageDialog(getContentPane(), "글이 등록되었습니다");
                 menuPanel.removeAll();
                 contentPanel.removeAll();
                 viewController.move(menuPanel, contentPanel);
