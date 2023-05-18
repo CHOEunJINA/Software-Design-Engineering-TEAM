@@ -5,11 +5,13 @@
 package deu.cse.blog.View;
 
 import deu.cse.blog.Controller.MainViewController;
+import deu.cse.blog.Controller.Originator;
 import deu.cse.blog.Controller.SavePostModelController;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.TimerTask;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import java.util.Timer;
 /**
  * 글 작성 페이지 GUI
  * @author 강대한
@@ -25,6 +28,7 @@ import javax.swing.JTextField;
  * 2023.5.17 "글 저장 기능 구현" 강대한
  */
 public class PostView extends View{
+    private Originator originator;
     private JPanel menuPanel;
     private JPanel contentPanel;
     private JScrollPane scroller;
@@ -39,11 +43,14 @@ public class PostView extends View{
     private JButton foreForwardButton;
     private int postPanelHeight = 490;
     private int postPanelWidth = 800;
-    
+    private String state = "";
+    private Timer m;
+    private boolean isUndo;
     public PostView() {}
     
     public PostView(JPanel receivedMenuPanel, JPanel receivedContentPanel) {
-
+        originator = new Originator();
+        m = new Timer();
         menuPanel = receivedMenuPanel;
         contentPanel = receivedContentPanel;
         postPanel = new JPanel();
@@ -64,6 +71,8 @@ public class PostView extends View{
         foreForwardButton = new JButton("");
         mainPageButton.addActionListener(new MoveActionListener());
         saveButton.addActionListener(new PostActionListener());
+        backForwardButton.addActionListener(new PostActionListener());
+        foreForwardButton.addActionListener(new PostActionListener());
         
         toolPanel.add(mainPageButton);
         toolPanel.add(saveButton);
@@ -76,10 +85,22 @@ public class PostView extends View{
         menuPanel.add(toolPanel);
         menuPanel.add(titlePanel, BorderLayout.SOUTH);
         contentPanel.add(postPanel, BorderLayout.CENTER);
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (!state.equals(postArea.getText())) {
+                    state = postArea.getText();
+                    originator.setState(state);
+                }
+            }
+        };
+        m.schedule(task, 1000, 3000);
+        
     }
     class MoveActionListener implements ActionListener { //페이지 이동이나 검색 버튼을 클릭했을 때 어느 행동을 수행할지 결정
       @Override
       public void actionPerformed(ActionEvent e) {
+        m.cancel();
         setViewController(new MainViewController());
         menuPanel.removeAll();
         contentPanel.removeAll();
@@ -98,6 +119,7 @@ public class PostView extends View{
             setSetPostModelController(new SavePostModelController());
             boolean success = setPostModelController.setPost(title, post, user);
             if (success) {
+                m.cancel();
                 setViewController(new MainViewController());
                 JOptionPane.showMessageDialog(getContentPane(), "글이 등록되었습니다");
                 menuPanel.removeAll();
@@ -109,9 +131,13 @@ public class PostView extends View{
                 JOptionPane.showMessageDialog(getContentPane(), "잠시 후 다시 시도해주세요");
             }
         } else if (action.equals("")) {
-            
+            isUndo = true;
+            state = originator.getState(isUndo);
+            postArea.setText(state);
         } else if (action.equals("")) {
-            
+            isUndo = false;
+            state = originator.getState(isUndo);
+            postArea.setText(state);
         }
       }
     }
