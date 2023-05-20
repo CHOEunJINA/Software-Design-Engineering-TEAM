@@ -24,8 +24,8 @@ public class Model {
   }
   private static Model instance_ = new Model();
   public static String user = "";
-  private static String postFile = "src\\main\\java\\deu\\cse\\blog\\Data\\post.json"; // 작성된 글 데이터
-  private static String userFile = "src\\main\\java\\deu\\cse\\blog\\Data\\user.json"; // 유저 데이터
+  private static String postFile = "./post.json"; // 작성된 글 데이터
+  private static String userFile = "./user.json"; // 유저 데이터
   private Model() {}
 
   public static JSONArray getPost() {
@@ -53,30 +53,5 @@ public class Model {
           e.printStackTrace();
       }
   }
-  public static JSONArray getUser() {
-      Object obj = new Object();
-      JSONParser parser = new JSONParser();
-      JSONArray jsonArr = new JSONArray();
-      try {
-          FileReader reader = new FileReader(userFile, Charset.forName("utf-8"));
-          obj = parser.parse(reader);
-          jsonArr = (JSONArray) obj;
-          reader.close();
-      } catch (IOException e){
-          e.printStackTrace();
-      } catch (ParseException e) {
-          e.printStackTrace();
-      }
-      return jsonArr;
-  }
-  public static void setUser(JSONArray jsonArr) {
-      try {
-          FileWriter file = new FileWriter(userFile, Charset.forName("utf-8"));
-          file.write(jsonArr.toJSONString());
-          file.flush();
-          file.close();
-      } catch (IOException e) {
-          e.printStackTrace();
-      }
-  }
+
 }

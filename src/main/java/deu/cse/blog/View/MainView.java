@@ -1,167 +1,213 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package deu.cse.blog.View;
 
-import deu.cse.blog.Controller.LatestPostModelController;
-import deu.cse.blog.Controller.LoginViewController;
-import deu.cse.blog.Controller.MainViewController;
-import deu.cse.blog.Controller.MyViewController;
-import deu.cse.blog.Controller.PostViewController;
-import deu.cse.blog.Controller.SearchViewController;
-import java.awt.BorderLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-import javax.swing.JTextField;
-
 /**
- * 메인 화면 GUI
- * @author 강대한
- * 2023.5.11 "최적화" 강대한
- * 2023.5.16 "버튼 이름을 한글로 바꿈" 강대한
+ *
+ * @author 조은진
  */
-public class MainView extends View {
-  private JButton mypage_button;
-  private JButton postpage_button;
-  private JButton login_button;
-  private JButton signOutButton;
-  private JButton searchButton;
-  private JTextField searchBox;
-  private int row  = 6;
-  private int col = 1;
-  private JFrame frame;
-  private JPanel menuPanel;
-  private JPanel contentPanel;
-  private JPanel searchPanel;
-  private JLabel userLabel;
+public class MainView extends javax.swing.JFrame {
 
-  public MainView() { //처음 메인 페이지를 보여줄 때
-        frame = initFrame;
-        menuPanel = initMenuPanel;
-        contentPanel = initContentPanel;
-        searchPanel = new JPanel();
-        menuPanel.setPreferredSize(new Dimension(menuPanelWidth, menuPanelHeight));
-        contentPanel.setPreferredSize(new Dimension(contentPanelWidth, contentPanelHeight));
-        mypage_button = new JButton("내블로그");
-        postpage_button = new JButton("글쓰기");
-        login_button = new JButton("로그인");
-        
-        searchBox = new JTextField(50); //검색창
-        searchButton = new JButton("🔍");
-        searchBox.setText("");
-        
-        searchPanel.add(searchBox);
-        searchPanel.add(searchButton);
-        menuPanel.setLayout(new FlowLayout());
-        menuPanel.add(mypage_button);
-        menuPanel.add(postpage_button);
-        menuPanel.add(login_button);
-        menuPanel.add(searchPanel, BorderLayout.SOUTH);
-        
-        mypage_button.addActionListener(new MoveActionListener());
-        postpage_button.addActionListener(new MoveActionListener());
-        login_button.addActionListener(new MoveActionListener());
-        searchButton.addActionListener(new MoveActionListener());
-        
-        setPostModelController(new LatestPostModelController()); //최신 글 가져오기
-        List<String> titles = postModelController.getPost();
-        contentPanel.setLayout(new GridLayout(row, col));
-        for (String title : titles) { //최신 글 배치
-            JLabel label = new JLabel(title);
-            contentPanel.add(label);
-        }
-        frame.add(menuPanel, "North");
-        frame.add(contentPanel, "South");
-        frame.setVisible(true);
-  }
-  public MainView(JPanel receivedMenuPanel, JPanel receivedContentPanel) { // 다른 페이지에서 메인 페이지로 돌아올 때
-        menuPanel = receivedMenuPanel;
-        contentPanel = receivedContentPanel;
-        searchPanel = new JPanel();
-        
-        menuPanel.setPreferredSize(new Dimension(menuPanelWidth, menuPanelHeight));
-        
-        mypage_button = new JButton("내블로그");
-        postpage_button = new JButton("글쓰기");
-        login_button = new JButton("로그인");
-        signOutButton = new JButton("로그아웃");
-        
-        String username = user + "님";
-        userLabel = new JLabel(username);
-        searchBox = new JTextField(50); //검색창
-        searchButton = new JButton("🔍");
-        searchBox.setText("");
-        
-        searchPanel.add(searchBox);
-        searchPanel.add(searchButton);
-        menuPanel.setLayout(new FlowLayout());
-        menuPanel.add(mypage_button);
-        menuPanel.add(postpage_button);
-        
-        if ("".equals(user)) { //로그인 되었는지 아닌지에 따라 보여주는 것 달라지게
-                menuPanel.add(login_button);
-            } else {
-                menuPanel.add(userLabel);
-                menuPanel.add(signOutButton);
-            }
-        menuPanel.add(searchPanel, BorderLayout.SOUTH);
-        
-        mypage_button.addActionListener(new MoveActionListener());
-        postpage_button.addActionListener(new MoveActionListener());
-        login_button.addActionListener(new MoveActionListener());
-        signOutButton.addActionListener(new MoveActionListener());
-        searchButton.addActionListener(new MoveActionListener());
-        
-        setPostModelController(new LatestPostModelController());
-        List<String> titles = postModelController.getPost();
-        contentPanel.setLayout(new GridLayout(row, col));
-        for (String title : titles) {
-            JLabel label = new JLabel(title);
-            contentPanel.add(label);
-        }
-  }
-  class MoveActionListener implements ActionListener { //페이지 이동이나 검색 버튼을 클릭했을 때 어느 행동을 수행할지 결정
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        String page = e.getActionCommand();
-
-        if ("내블로그".equals(page)) {
-            System.out.println(user);
-            if ("".equals(user)) {
-                setViewController(new LoginViewController());               
-            } else {
-                setViewController(new MyViewController());
-            }
-        } else if ("글쓰기".equals(page)) {
-            if ("".equals(user)) {
-                setViewController(new LoginViewController());          
-            } else {
-                setViewController(new PostViewController());
-            }
-        } else if ("로그인".equals(page)) {
-            setViewController(new LoginViewController());
-        } else if ("로그아웃".equals(page)) { //로그인 유저 지우고 새로 고침
-            user = "";
-            setViewController(new MainViewController());
-        } else if ("🔍".equals(page)) {
-            String query = searchBox.getText();
-            //instance_.setQuery(query);
-            setViewController(new SearchViewController());
-        } 
-        menuPanel.removeAll(); // 기존 페이지 지우기
-        contentPanel.removeAll();
-        viewController.move(menuPanel, contentPanel);
-        menuPanel.updateUI(); // 이동한 페이지 출력
-        contentPanel.updateUI();
-      }
+    /**
+     * Creates new form MainView1
+     */
+    public MainView() {
+        initComponents();
+        setLocationRelativeTo(null); // 중앙 정렬
+        setVisible(true);
     }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        menuPanel = new javax.swing.JPanel();
+        contentPanel = new javax.swing.JPanel();
+        postpageButton = new javax.swing.JButton();
+        myblogButton = new javax.swing.JButton();
+        loginButton = new javax.swing.JButton();
+        searchBox = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("블로그");
+        setPreferredSize(new java.awt.Dimension(800, 600));
+        setSize(new java.awt.Dimension(800, 600));
+
+        menuPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        contentPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
+        contentPanel.setLayout(contentPanelLayout);
+        contentPanelLayout.setHorizontalGroup(
+            contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        contentPanelLayout.setVerticalGroup(
+            contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 514, Short.MAX_VALUE)
+        );
+
+        postpageButton.setText("글쓰기");
+        postpageButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                postpageButtonMouseClicked(evt);
+            }
+        });
+
+        myblogButton.setText("내 블로그");
+        myblogButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                myblogButtonMouseClicked(evt);
+            }
+        });
+
+        loginButton.setText("로그인");
+        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                loginButtonMouseClicked(evt);
+            }
+        });
+
+        searchBox.setPreferredSize(new java.awt.Dimension(7, 30));
+
+        searchButton.setText("🔍");
+        searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchButtonMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
+        menuPanel.setLayout(menuPanelLayout);
+        menuPanelLayout.setHorizontalGroup(
+            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(contentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(menuPanelLayout.createSequentialGroup()
+                .addGap(156, 156, 156)
+                .addComponent(postpageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addComponent(searchBox, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(menuPanelLayout.createSequentialGroup()
+                    .addGap(22, 22, 22)
+                    .addComponent(myblogButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(667, Short.MAX_VALUE)))
+        );
+        menuPanelLayout.setVerticalGroup(
+            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(postpageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(searchBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))))
+                .addGap(27, 27, 27)
+                .addComponent(contentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(menuPanelLayout.createSequentialGroup()
+                    .addGap(30, 30, 30)
+                    .addComponent(myblogButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(541, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(menuPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(menuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+    // 내 블로그 버튼 클릭 시
+    private void myblogButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myblogButtonMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_myblogButtonMouseClicked
+    // 글쓰기 버튼 클릭 시
+    private void postpageButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postpageButtonMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_postpageButtonMouseClicked
+    // 로그인 버튼 클릭 시
+    private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseClicked
+        // TODO add your handling code here:
+        new LoginView();
+        setVisible(false);
+    }//GEN-LAST:event_loginButtonMouseClicked
+    // 검색 버튼 클릭 시
+    private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchButtonMouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MainView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(MainView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(MainView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MainView().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel contentPanel;
+    private javax.swing.JButton loginButton;
+    private javax.swing.JPanel menuPanel;
+    private javax.swing.JButton myblogButton;
+    private javax.swing.JButton postpageButton;
+    private javax.swing.JTextField searchBox;
+    private javax.swing.JButton searchButton;
+    // End of variables declaration//GEN-END:variables
 }

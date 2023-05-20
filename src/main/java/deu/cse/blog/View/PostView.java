@@ -4,9 +4,7 @@
  */
 package deu.cse.blog.View;
 
-import deu.cse.blog.Controller.MainViewController;
-import deu.cse.blog.Controller.MyViewController;
-import deu.cse.blog.Controller.SearchViewController;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -19,7 +17,7 @@ import javax.swing.JPanel;
  * 2023.5.11 "최적화" 강대한
  * 2023.5.16 "버튼 이름을 한글로 바꿈" 강대한
  */
-public class PostView extends View{
+public class PostView extends JFrame{
     private JPanel menuPanel;
     private JPanel contentPanel;
 
@@ -43,15 +41,15 @@ public class PostView extends View{
         String page = e.getActionCommand();
         
         if ("블로그홈".equals(page)) {
-            setViewController(new MainViewController());
+            //setViewController(new MainViewPresenter());
         } else if ("내블로그".equals(page)) {
-            setViewController(new MyViewController());
+            //setViewController(new MyViewPresenter());
         } else if ("🔍".equals(page)) {
-            setViewController(new SearchViewController());
+            //setViewController(new SearchViewPresenter());
         }
         menuPanel.removeAll();
         contentPanel.removeAll();
-        viewController.move(menuPanel, contentPanel);
+        //viewController.move(menuPanel, contentPanel);
         menuPanel.updateUI();
         contentPanel.updateUI();
       }

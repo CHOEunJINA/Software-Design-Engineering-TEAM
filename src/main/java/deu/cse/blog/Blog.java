@@ -10,10 +10,10 @@ import deu.cse.blog.View.MainView;
 /**
  *
  * @author bluev
- */
+ */ 
 public class Blog {
 
     public static void main(String[] args) {
-        MainView main_page = new MainView(); //프로그램 실행시 메인 화면부터 
+       new MainView(); //프로그램 실행시 메인 화면부터 
     }
 }
