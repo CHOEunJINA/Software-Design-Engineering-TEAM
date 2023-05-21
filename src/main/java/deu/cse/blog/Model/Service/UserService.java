@@ -16,9 +16,10 @@ public class UserService {
 
     private UserRepository userRepository = new UserRepository();
 
-    public Boolean signUp(String id, String password, String passwordConfirm, String name, String gender) {
+    public Boolean signUp(String id, String name, String password, String passwordConfirm, String gender) {
         // 전달 받은 id로 유저 검색
         User target = userRepository.findById(id);
+        System.out.println("TARGET SignUP: "+target);
 
         // 이미 있는 ID 정보
         if (target != null) {
@@ -27,7 +28,13 @@ public class UserService {
 
         // ID 정보가 없으면 userRepository한테 User정보 저장 요청
         // Repository한테 요청하기 위해서 매개변수를 User 타입으로 변경
-        User user = new User(id, gender, password, name);
+        User user = new User.Builder()
+                .userId(id)
+                .password(password)
+                .name(name)
+                .gender(gender)
+                .build();
+        
 
         // save 결과 리턴
         return userRepository.save(user);
@@ -36,13 +43,13 @@ public class UserService {
     public Boolean login(String id, String password) {
 
         // 로그인한 사용자의 정보를 id를 통해 가져옴
-        User target = new User();
-        target = userRepository.findById(id);
+        User target = userRepository.findById(id);
+        System.out.println("TARGET Login : "+target);
         // id로 검색한 결과가 없으면 null 리턴
         if (target == null) {
             return null;
         }
-
+        
         // 입력받은 비밀번호랑 저장된 비밀번호 다르면 null 리턴
         if (!target.getPassword().equals(password)) {
 

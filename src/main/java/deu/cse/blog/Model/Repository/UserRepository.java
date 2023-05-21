@@ -8,13 +8,12 @@ package deu.cse.blog.Model.Repository;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import deu.cse.blog.Model.User;
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.Iterator;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
@@ -29,22 +28,25 @@ public class UserRepository {
     //사용자 정보 저장 메소드
     public Boolean save(User user) {
         try {
+            System.out.println("User"+user);
             // 기존 파일 로드
             FileReader reader = new FileReader(userFile, Charset.forName("utf-8"));
             Object obj = parser.parse(reader);
-
+            
             JSONArray jsonArr = (JSONArray) obj;
             reader.close();
 
             // JSONArray에 추가
             jsonArr.add(user.toJson());
+            System.out.println("JSONARR : "+jsonArr);
 
             // JSON 데이터를 텍스트 파일에 저장
-            FileWriter fileWriter = new FileWriter(userFile);
+            FileWriter fileWriter = new FileWriter(userFile, Charset.forName("utf-8"));
             fileWriter.write(jsonArr.toString());
-
+            fileWriter.flush();
+            fileWriter.close();
+            
             // 성공하면 true 리턴
-            System.out.println(jsonArr);
             return true;
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -63,7 +65,8 @@ public class UserRepository {
         try {
             // 기존 파일 로드
             FileReader reader = new FileReader(userFile, Charset.forName("utf-8"));
-            Object obj = parser.parse(reader);
+            Object obj=parser.parse(reader);
+            System.out.println("OKOK");
 
             JSONArray jsonArr = (JSONArray) obj;
             reader.close();
@@ -76,6 +79,7 @@ public class UserRepository {
                 JSONObject item = (JSONObject) iter.next();
                 // 읽어온 JSON이 User로 바뀜
                 User user = User.toEntity(item);
+                //User user= new User().toEntity(item);
 
                 // 전달 받은 id값이랑 비교를 하는 것
                 // 전달받은 id에 해당하는 사용자가 있는 경우

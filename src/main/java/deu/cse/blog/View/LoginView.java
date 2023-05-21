@@ -7,12 +7,14 @@ package deu.cse.blog.View;
 
 import deu.cse.blog.Presenter.UserPresenter;
 import javax.swing.JOptionPane;
+import deu.cse.blog.View.MainView;
 
 /**
  *
  * @author 조은진
  */
 public class LoginView extends javax.swing.JFrame {
+
 
     /**
      * Creates new form NewJFrame
@@ -147,7 +149,7 @@ public class LoginView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menuPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
+            .addComponent(menuPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(formPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -167,12 +169,12 @@ public class LoginView extends javax.swing.JFrame {
         String pw = new String(pwField.getPassword());
         UserPresenter userpresenter = new UserPresenter();
         
-        Boolean result=userpresenter.loginUser(id, pw);
+        String result=userpresenter.loginUser(id, pw);
         
-        if (result != null && true) {
+        if (result==id && result!=null) {
             JOptionPane.showMessageDialog(getContentPane(), "로그인에 성공하였습니다.");
-            new MainView();
-            setVisible(false);
+            new MainView(result);
+            setVisible(false);   
 
         } else {
             JOptionPane.showMessageDialog(getContentPane(), "로그인에 실패하였습니다.");
@@ -183,6 +185,7 @@ public class LoginView extends javax.swing.JFrame {
         // TODO add your handling code here:
         new MainView();
         setVisible(false);
+        
     }//GEN-LAST:event_mainPageButtonMouseClicked
     // 회원가입 버튼 클릭 시
     private void signUpButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signUpButtonMouseClicked
