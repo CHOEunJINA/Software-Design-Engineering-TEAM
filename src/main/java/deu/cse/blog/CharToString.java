@@ -13,7 +13,7 @@ public class CharToString {
         String pwd = "";
         for (char cha : password) {
             Character.toString(cha);
-            pwd += (pwd.equals("")) ? ""+cha+"" : ""+cha+"";
+            pwd += cha;
         }
         return pwd;
     }

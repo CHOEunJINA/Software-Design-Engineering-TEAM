@@ -4,8 +4,8 @@
  */
 package deu.cse.blog.Controller;
 
-import deu.cse.blog.Model.CareTaker;
 import deu.cse.blog.Model.Memento;
+import deu.cse.blog.Model.MementoArchiveIterator;
 
 /**
  *
@@ -13,30 +13,19 @@ import deu.cse.blog.Model.Memento;
  */
 public class Originator {
     private String state;
-    private CareTaker careTaker = new CareTaker();
-    private int index = -1;
-    private int maxIndex;
+    private MementoArchiveIterator mementoArchiveIterator = new MementoArchiveIterator();
+
     public void setState(String state) {
         this.state = state;
-        careTaker.add(saveStateToMemento());
-        index++;
-        if (index > maxIndex) {
-            maxIndex = index;
-        }
+        mementoArchiveIterator.add(saveStateToMemento());
     }
     
     public String getState(boolean isUndo) {
-        assert(index >= 0);
-        assert(index <= maxIndex);
-        if (isUndo) {
-            getStateFromMemento(careTaker.get(index));
-            index--;
-        } else {
-            index = index + 2;
-            getStateFromMemento(careTaker.get(index));
-            index--;
-        }
-        
+        if (isUndo && mementoArchiveIterator.hasBack()) {
+            getStateFromMemento(mementoArchiveIterator.backward());
+        } else if(!isUndo && mementoArchiveIterator.hasNext()){
+            getStateFromMemento(mementoArchiveIterator.next());
+        }    
         return state;
     }
     

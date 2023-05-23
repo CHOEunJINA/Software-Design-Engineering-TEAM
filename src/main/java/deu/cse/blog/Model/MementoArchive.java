@@ -5,24 +5,30 @@
 package deu.cse.blog.Model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * 
  * @author bluev
  */
-public class CareTaker {
-    private List<Memento> mementoList = new ArrayList<Memento>();
-
-    public CareTaker() {
+public class MementoArchive {
+    private List<Memento> mementoList = new ArrayList<Memento>(); //저장된 글 데이터 집합
+    
+    public MementoArchive() {
         mementoList.add(new Memento(""));
     }
     
-    public void add(Memento state) {
-        mementoList.add(state);
+    public void add(int index, Memento state) {
+        mementoList.add(index, state);
     }
     
-    public Memento get(int index) {
+    public Memento getMemento(int index) {
         return mementoList.get(index);
     }
+    
+    public int getLength() {
+        return mementoList.size();
+    }
+    
 }
