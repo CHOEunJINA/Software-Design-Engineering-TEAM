@@ -7,6 +7,8 @@ package deu.cse.blog.View;
 
 import deu.cse.blog.Presenter.Originator;
 import deu.cse.blog.Presenter.PostPresenter;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,12 +20,11 @@ public class PostWriteView extends javax.swing.JFrame {
     private String author = UserSession.getSession();
     private String title;
     private String content;
-    private String post;
 
     private PostPresenter postPresenter = new PostPresenter();
     private Originator originator = new Originator();
     private boolean isUndo;
-    private String state;
+    private String state = "";
 
     /**
      * Creates new form PostView1
@@ -31,6 +32,22 @@ public class PostWriteView extends javax.swing.JFrame {
     public PostWriteView() {
         initComponents();
         setLocationRelativeTo(null); // 중앙 정렬
+
+        Timer m = new Timer();
+        TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                System.out.println("스레드");
+                if (!state.equals(contentArea.getText())) {
+                    System.out.println("상태 저장");
+                    state = contentArea.getText();
+                    originator.setState(state);
+                }
+            }
+        };
+
+        m.schedule(task, 1000, 30000); // 30초 단위로 저장됨
         setVisible(true);
     }
 
@@ -210,7 +227,7 @@ public class PostWriteView extends javax.swing.JFrame {
         if (author != null) {
             new MainView(author);
             setVisible(false);
-        }else{
+        } else {
             new MainView();
             setVisible(false);
         }
@@ -261,10 +278,12 @@ public class PostWriteView extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
 
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new PostWriteView().setVisible(true);
+
             }
         });
     }
