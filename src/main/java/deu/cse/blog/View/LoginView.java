@@ -15,6 +15,7 @@ import deu.cse.blog.View.MainView;
  */
 public class LoginView extends javax.swing.JFrame {
 
+    public String result;
 
     /**
      * Creates new form NewJFrame
@@ -51,7 +52,6 @@ public class LoginView extends javax.swing.JFrame {
 
         menuPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        mainPageButton.setFont(new java.awt.Font("맑은 고딕", 0, 12)); // NOI18N
         mainPageButton.setText("블로그 홈");
         mainPageButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -86,7 +86,6 @@ public class LoginView extends javax.swing.JFrame {
         pwLabel.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         pwLabel.setText("비밀번호 : ");
 
-        signInButton.setFont(new java.awt.Font("맑은 고딕", 0, 12)); // NOI18N
         signInButton.setText("로그인");
         signInButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -94,7 +93,6 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
-        signUpButton.setFont(new java.awt.Font("맑은 고딕", 0, 12)); // NOI18N
         signUpButton.setText("회원가입");
         signUpButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -168,15 +166,16 @@ public class LoginView extends javax.swing.JFrame {
         String id = idField.getText();
         String pw = new String(pwField.getPassword());
         UserPresenter userpresenter = new UserPresenter();
-        
-        String result=userpresenter.loginUser(id, pw);
-        
-        if (result==id && result!=null) {
+
+        result = userpresenter.loginUser(id, pw);
+
+        if (result == id) {
+            UserSession.setSession(result);
             JOptionPane.showMessageDialog(getContentPane(), "로그인에 성공하였습니다.");
             new MainView(result);
-            setVisible(false);   
+            setVisible(false);
 
-        } else {
+        } else if (result == "null") {
             JOptionPane.showMessageDialog(getContentPane(), "로그인에 실패하였습니다.");
         }
     }//GEN-LAST:event_signInButtonMouseClicked
@@ -185,7 +184,7 @@ public class LoginView extends javax.swing.JFrame {
         // TODO add your handling code here:
         new MainView();
         setVisible(false);
-        
+
     }//GEN-LAST:event_mainPageButtonMouseClicked
     // 회원가입 버튼 클릭 시
     private void signUpButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signUpButtonMouseClicked

@@ -5,17 +5,22 @@
  */
 package deu.cse.blog.View;
 
-/**
- *
- * @author a4424
- */
-public class PostView extends javax.swing.JFrame {
+import deu.cse.blog.Presenter.PostPresenter;
+import javax.swing.JOptionPane;
 
+/**
+ * 
+ * @author 조은진
+ */
+public class PostWriteView extends javax.swing.JFrame {
+
+    private String author;
     /**
      * Creates new form PostView1
      */
-    public PostView() {
+    public PostWriteView() {
         initComponents();
+        setLocationRelativeTo(null); // 중앙 정렬
         setVisible(true);
     }
 
@@ -29,8 +34,8 @@ public class PostView extends javax.swing.JFrame {
     private void initComponents() {
 
         topPanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        addPost = new javax.swing.JButton();
+        blogHome = new javax.swing.JButton();
         contentPanel = new javax.swing.JPanel();
         titleField = new javax.swing.JTextField();
         imageButton = new javax.swing.JButton();
@@ -44,12 +49,22 @@ public class PostView extends javax.swing.JFrame {
 
         topPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton1.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
-        jButton1.setText("등록");
+        addPost.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        addPost.setText("등록");
+        addPost.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addPostMouseClicked(evt);
+            }
+        });
 
-        jButton2.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
-        jButton2.setText("블로그 홈");
-        jButton2.setPreferredSize(new java.awt.Dimension(77, 29));
+        blogHome.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        blogHome.setText("블로그 홈");
+        blogHome.setPreferredSize(new java.awt.Dimension(77, 29));
+        blogHome.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                blogHomeMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
         topPanel.setLayout(topPanelLayout);
@@ -57,9 +72,9 @@ public class PostView extends javax.swing.JFrame {
             topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(blogHome, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(addPost, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         topPanelLayout.setVerticalGroup(
@@ -67,14 +82,13 @@ public class PostView extends javax.swing.JFrame {
             .addGroup(topPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
+                    .addComponent(addPost, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(blogHome, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         contentPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        titleField.setFont(new java.awt.Font("맑은 고딕", 0, 12)); // NOI18N
         titleField.setForeground(new java.awt.Color(153, 153, 153));
         titleField.setText("제목");
 
@@ -88,7 +102,6 @@ public class PostView extends javax.swing.JFrame {
         saveButton.setText("저장");
 
         contentArea.setColumns(20);
-        contentArea.setFont(new java.awt.Font("맑은 고딕", 0, 12)); // NOI18N
         contentArea.setForeground(new java.awt.Color(153, 153, 153));
         contentArea.setRows(5);
         contentArea.setText("내용");
@@ -147,6 +160,29 @@ public class PostView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    // 등록 버튼 클릭 시
+    private void addPostMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addPostMouseClicked
+        // TODO add your handling code here:
+        String title = titleField.getText();
+        String content = contentArea.getText();
+        author = UserSession.getSession();
+
+        PostPresenter postPresenter = new PostPresenter();
+        Boolean result = postPresenter.register(title, content,author);
+
+        if (result == true) {
+            JOptionPane.showMessageDialog(getContentPane(), "글이 등록되었습니다.");
+
+        } else {
+            JOptionPane.showMessageDialog(getContentPane(), "글 등록에 실패하였습니다.");
+        }
+    }//GEN-LAST:event_addPostMouseClicked
+    // 블로그 홈 클릭 시
+    private void blogHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_blogHomeMouseClicked
+        // TODO add your handling code here:
+        new MainView(author);
+        setVisible(false);
+    }//GEN-LAST:event_blogHomeMouseClicked
 
     /**
      * @param args the command line arguments
@@ -165,32 +201,34 @@ public class PostView extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PostView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PostWriteView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PostView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PostWriteView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PostView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PostWriteView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PostView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PostWriteView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PostView().setVisible(true);
+                new PostWriteView().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addPost;
+    private javax.swing.JButton blogHome;
     private javax.swing.JTextArea contentArea;
     private javax.swing.JPanel contentPanel;
     private javax.swing.JButton fontButton;
     private javax.swing.JButton imageButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton saveButton;
     private javax.swing.JTextField titleField;

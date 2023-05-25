@@ -34,7 +34,6 @@ public class SignUpView extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        loginPageButton = new javax.swing.JButton();
         mainPageButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         pwLabel = new javax.swing.JLabel();
@@ -55,14 +54,6 @@ public class SignUpView extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        loginPageButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
-        loginPageButton.setText("로그인 화면으로");
-        loginPageButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginPageButtonMouseClicked(evt);
-            }
-        });
-
         mainPageButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         mainPageButton.setText("블로그 홈");
         mainPageButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -76,19 +67,15 @@ public class SignUpView extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(mainPageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(loginPageButton, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
-                .addGap(46, 46, 46))
+                .addGap(131, 131, 131))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mainPageButton, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(loginPageButton, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
+                .addComponent(mainPageButton, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -107,15 +94,17 @@ public class SignUpView extends javax.swing.JFrame {
         nameLabel.setText("이름");
 
         femaleButton.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup1.add(femaleButton);
         femaleButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         femaleButton.setText("여성");
 
         maleButton.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroup1.add(maleButton);
         maleButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         maleButton.setText("남성");
 
         cancelButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
-        cancelButton.setText("취소");
+        cancelButton.setText("뒤로가기");
         cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cancelButtonMouseClicked(evt);
@@ -157,7 +146,7 @@ public class SignUpView extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(pwConfirmField))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 66, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(idTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -237,12 +226,7 @@ public class SignUpView extends javax.swing.JFrame {
         new MainView();
         setVisible(false);
     }//GEN-LAST:event_mainPageButtonMouseClicked
-    //로그인 화면으로 버튼 클릭 시
-    private void loginPageButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginPageButtonMouseClicked
-        // TODO add your handling code here:
-        new LoginView();
-        setVisible(false);
-    }//GEN-LAST:event_loginPageButtonMouseClicked
+
     // 회원가입 버튼 클릭 시
     private void signUpButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signUpButtonMouseClicked
         // TODO add your handling code here:
@@ -257,7 +241,7 @@ public class SignUpView extends javax.swing.JFrame {
             gender = "여성";
         }
         UserPresenter userpresenter = new UserPresenter();
-        Boolean result=userpresenter.registerUser(id, name, pw, pwConfirm, gender);
+        Boolean result = userpresenter.registerUser(id, name, pw, pwConfirm, gender);
 
         if (result != null && true) {
             JOptionPane.showMessageDialog(getContentPane(), "회원가입에 성공하였습니다.");
@@ -266,9 +250,11 @@ public class SignUpView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getContentPane(), "회원가입에 실패하였습니다.");
         }
     }//GEN-LAST:event_signUpButtonMouseClicked
-    // 취소 버튼 클릭 시
+    // 뒤로가기 버튼 클릭 시
     private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
         // TODO add your handling code here:
+        new LoginView();
+        setVisible(false);
     }//GEN-LAST:event_cancelButtonMouseClicked
 
     /**
@@ -315,7 +301,6 @@ public class SignUpView extends javax.swing.JFrame {
     private javax.swing.JTextField idTextField;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JButton loginPageButton;
     private javax.swing.JButton mainPageButton;
     private javax.swing.JRadioButton maleButton;
     private javax.swing.JTextField nameField;

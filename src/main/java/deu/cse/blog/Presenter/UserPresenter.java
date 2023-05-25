@@ -14,6 +14,7 @@ import deu.cse.blog.Model.Service.UserService;
 public class UserPresenter {
 
     private UserService userService;
+    private String userid="";
 
     public UserPresenter() {
         this.userService = new UserService();
@@ -29,13 +30,32 @@ public class UserPresenter {
 
     public String loginUser(String id, String password) {
 
-        Boolean result = userService.login(id, password);
-
-        if (result == true) {
+        String result = userService.login(id, password);
+        if (result.equals("success")) {
+            //userid =id;
+            
             return id;
-        } else {
-            return null;
+        } else if (result.equals("null")) {
+            return "null";
         }
+        return null;
 
+    }
+
+    public Boolean deleteUser(String id) {
+
+        String result = userService.delete(id);
+
+        if (result.equals("success")) {
+            return true;
+        } else if (result.equals("null")) {
+            return false;
+        }
+        return null;
+
+    }
+
+    public String getUserId() {
+        return userid;
     }
 }

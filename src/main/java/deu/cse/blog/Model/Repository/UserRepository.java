@@ -5,54 +5,39 @@
  */
 package deu.cse.blog.Model.Repository;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import deu.cse.blog.Model.User;
-import java.io.FileWriter;
 import java.util.Iterator;
+import java.util.ListIterator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
  *
- * @author 조은진
+ * @author 조은진 사용자 정보 관리
  */
 public class UserRepository {
 
     private static String userFile = "./user.json"; // 유저 데이터
-    public JSONParser parser = new JSONParser();
 
     //사용자 정보 저장 메소드
     public Boolean save(User user) {
         try {
-            System.out.println("User"+user);
-            // 기존 파일 로드
-            FileReader reader = new FileReader(userFile, Charset.forName("utf-8"));
-            Object obj = parser.parse(reader);
-            
-            JSONArray jsonArr = (JSONArray) obj;
-            reader.close();
+            JSONArray jsonArr = FileManager.readFile(userFile);
 
             // JSONArray에 추가
             jsonArr.add(user.toJson());
-            System.out.println("JSONARR : "+jsonArr);
+            FileManager.writeFile(userFile, jsonArr);
 
-            // JSON 데이터를 텍스트 파일에 저장
-            FileWriter fileWriter = new FileWriter(userFile, Charset.forName("utf-8"));
-            fileWriter.write(jsonArr.toString());
-            fileWriter.flush();
-            fileWriter.close();
-            
-            // 성공하면 true 리턴
             return true;
+
         } catch (IOException | ParseException e) {
             e.printStackTrace();
-            // 실패하면 false 리턴
             return false;
         }
+
     }
 
     /**
@@ -62,14 +47,10 @@ public class UserRepository {
      */
     // id로 기존 회원정보가 있는지 찾는 메소드
     public User findById(String id) {
+
         try {
             // 기존 파일 로드
-            FileReader reader = new FileReader(userFile, Charset.forName("utf-8"));
-            Object obj=parser.parse(reader);
-            System.out.println("OKOK");
-
-            JSONArray jsonArr = (JSONArray) obj;
-            reader.close();
+            JSONArray jsonArr = FileManager.readFile(userFile);
 
             // JSONArray 다 돌면서 전달 받은 id값이 있는지 확인하는 것
             // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
@@ -98,5 +79,42 @@ public class UserRepository {
         return null;
     }
 
+    // id로 기존 회원정보가 있는지 찾고 삭제하는 메소드
+    public User deleteById(String id) {
+        try {
+            // 기존 파일 로드
+            JSONArray jsonArr = FileManager.readFile(userFile);
+
+            // JSONArray 다 돌면서 전달 받은 id값이 있는지 확인하는 것
+            // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
+            ListIterator iter = jsonArr.listIterator();
+
+            while (iter.hasNext()) {
+                JSONObject item = (JSONObject) iter.next();
+                // 읽어온 JSON이 User로 바뀜
+                User user = User.toEntity(item);
+
+                // 전달 받은 id값이랑 비교를 하는 것
+                // 전달받은 id에 해당하는 사용자가 있는 경우
+                if (user.getUserId().equals(id)) {
+                    // 해당 사용자 정보 삭제
+
+                    jsonArr.remove(iter.nextIndex() - 1);
+
+                    // JSON 데이터를 텍스트 파일에 저장
+                    FileManager.writeFile(userFile, jsonArr);
+
+                    return user;
+                }
+            }
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        // id에 해당하는 사용자를 못 찾은 경우 null 리턴
+        return null;
+    }
 
 }

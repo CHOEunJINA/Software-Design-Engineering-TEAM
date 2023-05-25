@@ -54,7 +54,6 @@ public class SearchView extends JFrame{
         }
         menuPanel.removeAll();
         contentPanel.removeAll();
-        //viewController.move(menuPanel, contentPanel);
         menuPanel.updateUI();
         contentPanel.updateUI();
       }
