@@ -4,16 +4,14 @@
  */
 
 package deu.cse.blog;
-
-import deu.cse.blog.View.MainView;
-
+import deu.cse.blog.View.MyView;
 /**
  *
- * @author bluev
- */
+ * @author 강대한
+ */ 
 public class Blog {
 
     public static void main(String[] args) {
-        MainView main_page = new MainView(); //프로그램 실행시 메인 화면부터 
+       new MyView(); //프로그램 실행시 메인 화면부터 
     }
 }
