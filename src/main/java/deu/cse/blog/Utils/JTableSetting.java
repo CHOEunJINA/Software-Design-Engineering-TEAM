@@ -118,8 +118,8 @@ public class JTableSetting {
         tableModel.insertRow(tableModel.getRowCount(), value);
     }
 
-    // 리스트를 출력하는 테이블은 이 디자인을 적용
-    public static void listTableSetting(JTable jTable) {
+    // 게시물 리스트를 출력하는 테이블은 이 디자인을 적용
+    public static void postTableSetting(JTable jTable) {
         /* 테이블 셀 사이즈 변경 */
         setTableCellSize(jTable, new int[]{100, 600, 100, 100});
 
@@ -130,6 +130,19 @@ public class JTableSetting {
         TableColumnModel tableColumnModel = jTable.getColumnModel();
         tableColumnModel.getColumn(0).setCellRenderer(dtcr);
         tableColumnModel.getColumn(3).setCellRenderer(dtcr);
+    }
+
+    // 댓글 리스트를 출력하는 테이블은 이 디자인을 적용
+    public static void commentTableSetting(JTable jTable) {
+        /* 테이블 셀 사이즈 변경 */
+        setTableCellSize(jTable, new int[]{200, 600});
+
+        /* 테이블 컬럼 중앙 정렬 */
+        DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트 테이블 셀 렌더러 생성
+        dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
+
+        TableColumnModel tableColumnModel = jTable.getColumnModel();
+        tableColumnModel.getColumn(0).setCellRenderer(dtcr);
     }
 
 }

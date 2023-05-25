@@ -24,16 +24,18 @@ public class MainView extends javax.swing.JFrame {
     private JScrollPane scrollPane = new JScrollPane();
     private PostPresenter postPresenter = new PostPresenter();
     private ArrayList<Post> posts;
+    String userId = UserSession.getSession();
 
     /**
      * Creates new form MainView
      */
     public MainView() {
         initComponents();
+        dispose();
         layoutInit();
 
         setLocationRelativeTo(null); // 중앙 정렬
-        setVisible(true);
+
         logoutButton.setVisible(false);
         logoutButton.setEnabled(false);
         deleteUserButton.setVisible(false);
@@ -44,13 +46,14 @@ public class MainView extends javax.swing.JFrame {
         scrollPane.getViewport().setOpaque(false);
         JTableSetting.tableInit(scrollPane, jTable2);
         JTableSetting.tableHeaderInit(jTable2, 900, 100);
-        JTableSetting.listTableSetting(jTable2);
+        JTableSetting.postTableSetting(jTable2);
 
         posts = postPresenter.findAll();
         JTableSetting.insertTableRow((DefaultTableModel) jTable2.getModel(), DataParser.postsToObject(posts));
+        setVisible(true);
     }
 
-    public MainView(String result) {
+    public MainView(String userId) {
         initComponents();
         layoutInit();
 
@@ -62,13 +65,14 @@ public class MainView extends javax.swing.JFrame {
         deleteUserButton.setVisible(true);
         deleteUserButton.setEnabled(true);
         myblogButton.setEnabled(true);
-        useridLabel.setText(result + "님");
-        setVisible(true);
+        useridLabel.setText(userId + "님");
+
         JTableSetting.tableInit(scrollPane, jTable2);
         JTableSetting.tableHeaderInit(jTable2, 900, 100);
-        JTableSetting.listTableSetting(jTable2);
-        ArrayList<Post> posts = postPresenter.findAll();
+        JTableSetting.postTableSetting(jTable2);
+        posts = postPresenter.findAll();
         JTableSetting.insertTableRow((DefaultTableModel) jTable2.getModel(), DataParser.postsToObject(posts));
+        setVisible(true);
     }
 
     public void layoutInit() {
@@ -107,6 +111,7 @@ public class MainView extends javax.swing.JFrame {
         searchBox = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
         deleteUserButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
 
@@ -117,9 +122,11 @@ public class MainView extends javax.swing.JFrame {
         menuPanel.setBackground(new java.awt.Color(255, 255, 255));
         menuPanel.setMaximumSize(new java.awt.Dimension(900, 150));
         menuPanel.setPreferredSize(new java.awt.Dimension(813, 643));
+        menuPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         useridLabel.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         useridLabel.setText("    ");
+        menuPanel.add(useridLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, -1, -1));
 
         logoutButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         logoutButton.setText("로그아웃");
@@ -128,6 +135,7 @@ public class MainView extends javax.swing.JFrame {
                 logoutButtonMouseClicked(evt);
             }
         });
+        menuPanel.add(logoutButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 50, 150, 50));
 
         postpageButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         postpageButton.setText("글쓰기");
@@ -136,6 +144,7 @@ public class MainView extends javax.swing.JFrame {
                 postpageButtonMouseClicked(evt);
             }
         });
+        menuPanel.add(postpageButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 50, 130, 50));
 
         myblogButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         myblogButton.setText("내 블로그");
@@ -145,6 +154,7 @@ public class MainView extends javax.swing.JFrame {
                 myblogButtonActionPerformed(evt);
             }
         });
+        menuPanel.add(myblogButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 130, 50));
 
         loginButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         loginButton.setText("로그인");
@@ -153,8 +163,10 @@ public class MainView extends javax.swing.JFrame {
                 loginButtonMouseClicked(evt);
             }
         });
+        menuPanel.add(loginButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 50, 150, 50));
 
         searchBox.setPreferredSize(new java.awt.Dimension(7, 30));
+        menuPanel.add(searchBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(477, 60, 310, -1));
 
         searchButton.setText("🔍");
         searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -162,6 +174,7 @@ public class MainView extends javax.swing.JFrame {
                 searchButtonMouseClicked(evt);
             }
         });
+        menuPanel.add(searchButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 70, 50, -1));
 
         deleteUserButton.setText("회원 탈퇴");
         deleteUserButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -169,54 +182,8 @@ public class MainView extends javax.swing.JFrame {
                 deleteUserButtonMouseClicked(evt);
             }
         });
-
-        javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
-        menuPanel.setLayout(menuPanelLayout);
-        menuPanelLayout.setHorizontalGroup(
-            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menuPanelLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(myblogButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
-                .addComponent(postpageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(useridLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addComponent(searchBox, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(searchButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(deleteUserButton)))
-                .addContainerGap())
-        );
-        menuPanelLayout.setVerticalGroup(
-            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menuPanelLayout.createSequentialGroup()
-                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(useridLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(deleteUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
-                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(myblogButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(postpageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(searchBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(69, 69, 69))
-        );
+        menuPanel.add(deleteUserButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 10, -1, -1));
+        menuPanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, 120, 20));
 
         jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane2.setOpaque(false);
@@ -268,8 +235,15 @@ public class MainView extends javax.swing.JFrame {
     // 글쓰기 버튼 클릭 시
     private void postpageButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postpageButtonMouseClicked
         // TODO add your handling code here:
-        new PostWriteView();
-        setVisible(false);
+        
+        if (userId == null) {
+            new LoginView();
+            setVisible(false);
+        } else {
+            new PostWriteView();
+            setVisible(false);
+        }
+
     }//GEN-LAST:event_postpageButtonMouseClicked
     // 로그인 버튼 클릭 시
     private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseClicked
@@ -280,7 +254,7 @@ public class MainView extends javax.swing.JFrame {
     // 검색 버튼 클릭 시
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_searchButtonMouseClicked
     // 로그아웃 버튼 눌렀을 때
     private void logoutButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseClicked
@@ -295,16 +269,27 @@ public class MainView extends javax.swing.JFrame {
         new DeleteInfoView();
         setVisible(false);
     }//GEN-LAST:event_deleteUserButtonMouseClicked
-
+    // 글쓰기 버튼 클릭 시
     private void myblogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myblogButtonActionPerformed
         // TODO add your handling code here:
-        new PostWriteView();
+        if(userId!=null){
+            new PostWriteView();
+            setVisible(false);
+        }else{
+            new LoginView();
+            setVisible(false);
+        }
+        
     }//GEN-LAST:event_myblogButtonActionPerformed
     // 테이블에 있는 목록 클릭 시
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         // TODO add your handling code here:
-        jTable2.getSelectedColumns();
-        
+        int row = jTable2.getSelectedRow();
+        Post selectedPost = posts.get(row);
+
+        new CheckPostView(selectedPost);
+        setVisible(false);
+
     }//GEN-LAST:event_jTable2MouseClicked
 
     /**
@@ -350,11 +335,13 @@ public class MainView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new MainView().setVisible(true);
+            
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteUserButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
     private javax.swing.JButton loginButton;

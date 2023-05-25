@@ -11,10 +11,11 @@ import deu.cse.blog.Model.User;
 /**
  *
  * @author 조은진
+ * 2023.5.24 "currentUser 메서드 생성" 강대한
  */
 public class UserService {
 
-    private UserRepository userRepository = new UserRepository();
+    private UserRepository userRepository = UserRepository.getInstance();
 
     public Boolean signUp(String id, String name, String password, String passwordConfirm, String gender) {
         // 전달 받은 id로 유저 검색
@@ -34,15 +35,13 @@ public class UserService {
                 .gender(gender)
                 .build();
 
-        // save 결과 리턴
         return userRepository.save(user);
     } //회원가입시 Repository에 요청하기 -> 이미 있는 회원인지 확인을 한다.
 
     public String login(String id, String password) {
-
         // 로그인한 사용자의 정보를 id를 통해 가져옴
         User target = userRepository.findById(id);
-        // id로 검색한 결과가 없으면 null 리턴
+
         if (target == null) {
             return "null";
         }
@@ -66,6 +65,7 @@ public class UserService {
         }
 
         return "success";
+
     }
 
 }

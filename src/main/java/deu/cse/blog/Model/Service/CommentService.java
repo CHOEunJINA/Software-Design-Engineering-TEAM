@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class CommentService {
 
-    private CommentRepository commentRepository = new CommentRepository();
+    private CommentRepository commentRepository = CommentRepository.getInstance();
 
     public Boolean add(String postId, String content, String author) {
 
@@ -30,18 +30,18 @@ public class CommentService {
         // save 결과 리턴
         return commentRepository.save(comment);
     }
-    
-    
 
-    public String delete(String commentId) {
+    public String delete(String userId) {
 
-        ArrayList target = commentRepository.findByUserId(commentId);
+        ArrayList<Comment> target = commentRepository.findByUserId(userId);
 
-        // commentId 검색한 결과가 없으면 null 리턴
-        if (target == null) {
-            return "null";
+        for (Comment comment : target) {
+            Comment result = commentRepository.deleteById(userId);
+            if (result == null) {
+                return "null";
+            }
         }
-
+        
         return "success";
     }
 
@@ -78,4 +78,14 @@ public class CommentService {
         return true;
 
     }
+    
+    // postId를 통해 게시물의 댓글을 지움
+    public ArrayList<Comment> findByPostId(String postId) {
+
+        ArrayList<Comment> target = commentRepository.findByPostId(postId);
+
+        return target;
+
+    }
+
 }

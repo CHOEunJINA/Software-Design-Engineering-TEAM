@@ -1,4 +1,5 @@
 /*
+<<<<<<< HEAD
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -16,11 +17,20 @@ import org.json.simple.parser.ParseException;
 
 /**
  *
- * @author 조은진
+ * @author 조은진 "싱글턴 패턴 적용" - 강대한
  */
 public class PostRepository {
 
     private static String postFile = "./post.json"; // 게시물 데이터
+    private static PostRepository postRepository = new PostRepository();
+
+    private PostRepository() {
+    }
+
+    //싱글턴 패턴을 적용하여 객체를 하나만 생성되게 생성자를 private으로 해두고 객체를 이른 초기화로 생성, 정적 메서드를 통해 객체 반환
+    public static PostRepository getInstance() {
+        return postRepository;
+    }
 
     //게시물 저장 메소드
     public Boolean save(Post post) {
@@ -87,7 +97,7 @@ public class PostRepository {
             JSONArray jsonArrPost = FileManager.readFile(postFile);
             // JSONArray 다 돌면서 전달 받은 commentId 있는지 확인하는 것
             // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
-            ListIterator iter = jsonArrPost.listIterator();
+
             ArrayList<Post> list = new ArrayList();
 
             for (int i = jsonArrPost.size() - 1; i >= 0; i--) {

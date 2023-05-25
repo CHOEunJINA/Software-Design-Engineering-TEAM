@@ -6,7 +6,6 @@
 package deu.cse.blog.Model.Repository;
 
 import java.io.IOException;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import deu.cse.blog.Model.User;
 import java.util.Iterator;
@@ -15,12 +14,22 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
+ * Repository로부터 유저 데이터를 받아 요청을 처리하여 반환
  *
  * @author 조은진 사용자 정보 관리
  */
 public class UserRepository {
 
     private static String userFile = "./user.json"; // 유저 데이터
+    private static UserRepository userRepository = new UserRepository();
+
+    // 싱글턴 패턴을 적용하여 객체를 하나만 생성되게 생성자를 private으로 해두고 객체를 이른 초기화로 생성, 정적 메서드를 통해 객체 반환
+    public static UserRepository getInstance() {
+        return userRepository;
+    }
+
+    private UserRepository() {
+    }
 
     //사용자 정보 저장 메소드
     public Boolean save(User user) {
@@ -37,7 +46,6 @@ public class UserRepository {
             e.printStackTrace();
             return false;
         }
-
     }
 
     /**
@@ -51,6 +59,7 @@ public class UserRepository {
         try {
             // 기존 파일 로드
             JSONArray jsonArr = FileManager.readFile(userFile);
+            // 기존 파일 로드
 
             // JSONArray 다 돌면서 전달 받은 id값이 있는지 확인하는 것
             // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
@@ -69,14 +78,13 @@ public class UserRepository {
                     return user;
                 }
             }
-
+            // id에 해당하는 사용자를 못 찾은 경우 null 리턴
+            return null;
         } catch (IOException | ParseException e) {
             e.printStackTrace();
             return null;
         }
 
-        // id에 해당하는 사용자를 못 찾은 경우 null 리턴
-        return null;
     }
 
     // id로 기존 회원정보가 있는지 찾고 삭제하는 메소드

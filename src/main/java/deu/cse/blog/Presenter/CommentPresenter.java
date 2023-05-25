@@ -5,7 +5,10 @@
  */
 package deu.cse.blog.Presenter;
 
+import deu.cse.blog.Model.Comment;
+import deu.cse.blog.Model.Post;
 import deu.cse.blog.Model.Service.CommentService;
+import java.util.ArrayList;
 
 /**
  *
@@ -39,6 +42,11 @@ public class CommentPresenter {
         }
         return null;
 
+    }
+
+    public ArrayList<Comment> findByPostId(String postId) {
+        ArrayList<Comment> result = commentService.findByPostId(postId);
+        return result;
     }
 
 }

@@ -8,11 +8,14 @@ import deu.cse.blog.View.MainView;
 
 /**
  *
- * @author bluev
+ *
+ *
+ * uthor bluev
  */
 public class Blog {
 
     public static void main(String[] args) {
         new MainView(); //프로그램 실행시 메인 화면부터 
+
     }
 }

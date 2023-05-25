@@ -5,16 +5,26 @@
  */
 package deu.cse.blog.View;
 
+import deu.cse.blog.Presenter.Originator;
 import deu.cse.blog.Presenter.PostPresenter;
 import javax.swing.JOptionPane;
 
 /**
- * 
+ *
  * @author 조은진
  */
 public class PostWriteView extends javax.swing.JFrame {
 
-    private String author;
+    private String author = UserSession.getSession();
+    private String title;
+    private String content;
+    private String post;
+
+    private PostPresenter postPresenter = new PostPresenter();
+    private Originator originator = new Originator();
+    private boolean isUndo;
+    private String state;
+
     /**
      * Creates new form PostView1
      */
@@ -40,9 +50,10 @@ public class PostWriteView extends javax.swing.JFrame {
         titleField = new javax.swing.JTextField();
         imageButton = new javax.swing.JButton();
         fontButton = new javax.swing.JButton();
-        saveButton = new javax.swing.JButton();
+        redoButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         contentArea = new javax.swing.JTextArea();
+        undoButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(800, 600));
@@ -98,8 +109,13 @@ public class PostWriteView extends javax.swing.JFrame {
         fontButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
         fontButton.setText("글씨");
 
-        saveButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
-        saveButton.setText("저장");
+        redoButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        redoButton.setText("Redo");
+        redoButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                redoButtonMouseClicked(evt);
+            }
+        });
 
         contentArea.setColumns(20);
         contentArea.setForeground(new java.awt.Color(153, 153, 153));
@@ -107,24 +123,35 @@ public class PostWriteView extends javax.swing.JFrame {
         contentArea.setText("내용");
         jScrollPane1.setViewportView(contentArea);
 
+        undoButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        undoButton.setText("Undo");
+        undoButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                undoButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
         contentPanel.setLayout(contentPanelLayout);
         contentPanelLayout.setHorizontalGroup(
             contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contentPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(imageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
-                .addComponent(fontButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 474, Short.MAX_VALUE)
-                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(contentPanelLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
-                    .addComponent(titleField))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, contentPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(imageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38)
+                        .addComponent(fontButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 328, Short.MAX_VALUE)
+                        .addComponent(undoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(redoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, contentPanelLayout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
+                            .addComponent(titleField))))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         contentPanelLayout.setVerticalGroup(
             contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,7 +165,8 @@ public class PostWriteView extends javax.swing.JFrame {
                     .addComponent(imageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(fontButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(redoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(undoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(22, 22, 22))
         );
 
@@ -163,12 +191,11 @@ public class PostWriteView extends javax.swing.JFrame {
     // 등록 버튼 클릭 시
     private void addPostMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addPostMouseClicked
         // TODO add your handling code here:
-        String title = titleField.getText();
-        String content = contentArea.getText();
-        author = UserSession.getSession();
+        title = titleField.getText();
+        content = contentArea.getText();
 
-        PostPresenter postPresenter = new PostPresenter();
-        Boolean result = postPresenter.register(title, content,author);
+        postPresenter = new PostPresenter();
+        Boolean result = postPresenter.register(title, content, author);
 
         if (result == true) {
             JOptionPane.showMessageDialog(getContentPane(), "글이 등록되었습니다.");
@@ -180,9 +207,29 @@ public class PostWriteView extends javax.swing.JFrame {
     // 블로그 홈 클릭 시
     private void blogHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_blogHomeMouseClicked
         // TODO add your handling code here:
-        new MainView(author);
-        setVisible(false);
+        if (author != null) {
+            new MainView(author);
+            setVisible(false);
+        }else{
+            new MainView();
+            setVisible(false);
+        }
+
     }//GEN-LAST:event_blogHomeMouseClicked
+    // 뒤로 가기(Undo) 버튼 클릭 시
+    private void undoButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_undoButtonMouseClicked
+        // TODO add your handling code here:
+        isUndo = true;
+        state = originator.getState(isUndo);
+        contentArea.setText(state);
+    }//GEN-LAST:event_undoButtonMouseClicked
+    // 앞으로 가기(Redo) 버튼 클릭 시
+    private void redoButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_redoButtonMouseClicked
+        // TODO add your handling code here:
+        isUndo = false;
+        state = originator.getState(isUndo);
+        contentArea.setText(state);
+    }//GEN-LAST:event_redoButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -230,8 +277,10 @@ public class PostWriteView extends javax.swing.JFrame {
     private javax.swing.JButton fontButton;
     private javax.swing.JButton imageButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton saveButton;
+    private javax.swing.JButton redoButton;
     private javax.swing.JTextField titleField;
     private javax.swing.JPanel topPanel;
+    private javax.swing.JButton undoButton;
     // End of variables declaration//GEN-END:variables
+
 }

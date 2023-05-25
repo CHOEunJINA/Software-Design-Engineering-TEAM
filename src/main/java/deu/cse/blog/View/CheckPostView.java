@@ -5,17 +5,55 @@
  */
 package deu.cse.blog.View;
 
+import deu.cse.blog.Model.Comment;
+import deu.cse.blog.Model.Post;
+import deu.cse.blog.Presenter.CommentPresenter;
+import deu.cse.blog.Utils.DataParser;
+import deu.cse.blog.Utils.JTableSetting;
+import java.awt.Color;
+import java.util.ArrayList;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
- * @author a4424
+ * @author 조은진
  */
 public class CheckPostView extends javax.swing.JFrame {
+
+    private JScrollPane scrollPane = new JScrollPane();
+    private Post selectedPost;
+    String userId = UserSession.getSession();
+    private CommentPresenter commentPresenter = new CommentPresenter();
 
     /**
      * Creates new form CheckPostView
      */
     public CheckPostView() {
+        new CheckPostView(selectedPost);
+    }
+
+    public CheckPostView(Post selectedPost) {
         initComponents();
+        setLocationRelativeTo(null); // 중앙 정렬
+
+        scrollPane.setBackground(new Color(255, 255, 255, 0));
+        scrollPane.getViewport().setOpaque(false);
+
+        titleContentLabel.setText(selectedPost.getTitle());
+        contentLabel.setText(selectedPost.getContent());
+
+        this.selectedPost = selectedPost;
+
+        JTableSetting.tableInit(scrollPane, jTable1);
+        JTableSetting.tableHeaderInit(jTable1, 900, 40);
+        JTableSetting.commentTableSetting(jTable1);
+        String postId = selectedPost.getPostId();
+        ArrayList<Comment> commentList = commentPresenter.findByPostId(postId);
+
+        JTableSetting.insertTableRow((DefaultTableModel) jTable1.getModel(), DataParser.commentsToObject(commentList));
+
+        setVisible(true);
     }
 
     /**
@@ -27,23 +65,179 @@ public class CheckPostView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        topPanel = new javax.swing.JPanel();
+        blogHomeButton = new javax.swing.JButton();
+        titleLabel = new javax.swing.JLabel();
+        titleContentLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        contentLabel = new javax.swing.JLabel();
+        buttomPanel = new javax.swing.JPanel();
+        commentButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
+        commentArea = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        topPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        blogHomeButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        blogHomeButton.setText("블로그 홈");
+        blogHomeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                blogHomeButtonMouseClicked(evt);
+            }
+        });
+
+        titleLabel.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        titleLabel.setText("제목 : ");
+
+        titleContentLabel.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+
+        javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
+        topPanel.setLayout(topPanelLayout);
+        topPanelLayout.setHorizontalGroup(
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(topPanelLayout.createSequentialGroup()
+                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(topPanelLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(blogHomeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(topPanelLayout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(titleLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(titleContentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 654, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(54, Short.MAX_VALUE))
+        );
+        topPanelLayout.setVerticalGroup(
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(blogHomeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titleContentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(47, 47, 47))
+        );
+
+        jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
+
+        contentLabel.setBackground(new java.awt.Color(255, 255, 255));
+        contentLabel.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        contentLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        contentLabel.setOpaque(true);
+        jScrollPane2.setViewportView(contentLabel);
+
+        buttomPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        commentButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        commentButton.setText("댓글 달기");
+        commentButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                commentButtonMouseClicked(evt);
+            }
+        });
+
+        commentArea.setColumns(20);
+        commentArea.setRows(5);
+        jScrollPane1.setViewportView(commentArea);
+
+        javax.swing.GroupLayout buttomPanelLayout = new javax.swing.GroupLayout(buttomPanel);
+        buttomPanel.setLayout(buttomPanelLayout);
+        buttomPanelLayout.setHorizontalGroup(
+            buttomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttomPanelLayout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(commentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
+        );
+        buttomPanelLayout.setVerticalGroup(
+            buttomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttomPanelLayout.createSequentialGroup()
+                .addContainerGap(32, Short.MAX_VALUE)
+                .addComponent(commentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttomPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "작성자", "내용"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 912, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(topPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(topPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(buttomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    // 블로그 홈 버튼 클릭 시
+    private void blogHomeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_blogHomeButtonMouseClicked
+        // TODO add your handling code here:
+        if (userId != null) {
+            new MainView(userId);
+            setVisible(false);
+        } else {
+            new MainView();
+            setVisible(false);
+        }
+    }//GEN-LAST:event_blogHomeButtonMouseClicked
+
+   // 댓글 등록하기 버튼 클릭 시
+    private void commentButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_commentButtonMouseClicked
+        // TODO add your handling code here:
+        String content = commentArea.getText();
+        String postId = this.selectedPost.getPostId();
+        Boolean result = commentPresenter.register(postId, content, userId);
+        if (result) {
+            JTableSetting.insertTableRow((DefaultTableModel) jTable1.getModel(), new Object[]{
+                userId, content
+
+            });
+        }
+    }//GEN-LAST:event_commentButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -75,12 +269,25 @@ public class CheckPostView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+
                 new CheckPostView().setVisible(true);
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton blogHomeButton;
+    private javax.swing.JPanel buttomPanel;
+    private javax.swing.JTextArea commentArea;
+    private javax.swing.JButton commentButton;
+    private javax.swing.JLabel contentLabel;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel titleContentLabel;
+    private javax.swing.JLabel titleLabel;
+    private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
 }

@@ -14,7 +14,6 @@ import deu.cse.blog.Model.Service.UserService;
 public class UserPresenter {
 
     private UserService userService;
-    private String userid="";
 
     public UserPresenter() {
         this.userService = new UserService();
@@ -33,7 +32,7 @@ public class UserPresenter {
         String result = userService.login(id, password);
         if (result.equals("success")) {
             //userid =id;
-            
+
             return id;
         } else if (result.equals("null")) {
             return "null";
@@ -53,9 +52,5 @@ public class UserPresenter {
         }
         return null;
 
-    }
-
-    public String getUserId() {
-        return userid;
     }
 }

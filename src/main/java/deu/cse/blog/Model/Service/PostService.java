@@ -1,4 +1,5 @@
 /*
+<<<<<<< HEAD
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -15,7 +16,8 @@ import java.util.ArrayList;
  */
 public class PostService {
 
-    private PostRepository postRepository = new PostRepository();
+    private PostRepository postRepository=PostRepository.getInstance();
+    
 
     public Boolean add(String title, String content, String author) {
 
@@ -43,7 +45,7 @@ public class PostService {
 
     // userId로 게시물 지우기
     public ArrayList deleteByUserId(String userId) {
-        System.out.println("PostRepository deleteByUserId"+userId);
+        System.out.println("PostRepository deleteByUserId" + userId);
 
         return postRepository.deleteByUserId(userId);
 

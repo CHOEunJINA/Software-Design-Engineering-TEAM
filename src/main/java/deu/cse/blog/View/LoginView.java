@@ -22,6 +22,7 @@ public class LoginView extends javax.swing.JFrame {
      */
     public LoginView() {
         initComponents();
+        dispose();
         setLocationRelativeTo(null); // 중앙 정렬
         setVisible(true);
     }

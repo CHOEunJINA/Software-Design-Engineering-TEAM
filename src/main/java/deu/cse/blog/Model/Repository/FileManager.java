@@ -22,7 +22,7 @@ public class FileManager {
     private static JSONParser parser = new JSONParser();
 
     /**
-     *
+     * 파일 읽어오기
      * @param filepath
      * @return
      * @throws IOException
@@ -40,14 +40,14 @@ public class FileManager {
     }
 
     /**
-     *
+     * JSON 데이터를 텍스트 파일에 저장
      * @param filepath
      * @param jsonArr
      * @throws IOException
      * @throws ParseException
      */
     public static void writeFile(String filepath, JSONArray jsonArr) throws IOException, ParseException {
-        // JSON 데이터를 텍스트 파일에 저장
+        
         FileWriter fileWriter = new FileWriter(filepath, Charset.forName("utf-8"));
         fileWriter.write(jsonArr.toString());
         fileWriter.flush();
