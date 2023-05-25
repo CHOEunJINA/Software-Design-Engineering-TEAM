@@ -9,6 +9,7 @@ import deu.cse.blog.Presenter.PostPresenter;
 import deu.cse.blog.Presenter.ViewPresenter;
 import java.util.TimerTask;
 import java.util.Timer;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -34,14 +35,14 @@ public class MyPostView extends javax.swing.JFrame {
 
     public MyPostView(String[] postInfo) {
 
-        title = postInfo[0];
+        title = postInfo[0]; 
         user = postInfo[1];
         time = postInfo[2];
-        post = postPresenter.loadPost(title, user, time);
+        post = postPresenter.loadPost(title, user, time); // 글 내용 불러오기
         state = post;
         Timer m = new Timer();
         initComponents();
-        TimerTask task = new TimerTask() {
+        TimerTask task = new TimerTask() { // 글의 내용이 바뀌어질 때 마다 글 내용 저장
             @Override
             public void run() {
                 if (!state.equals(jTextArea1.getText())) {
@@ -50,8 +51,7 @@ public class MyPostView extends javax.swing.JFrame {
                 }
             }
         };
-        m.schedule(task, 1000, 3000);
-        setVisible(true);
+        m.schedule(task, 1000, 3000); // 3초 마다 작업 실행
     }
 
     /**
@@ -87,6 +87,11 @@ public class MyPostView extends javax.swing.JFrame {
         });
 
         deletePostButton.setText("삭제");
+        deletePostButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deletePostButtonActionPerformed(evt);
+            }
+        });
 
         jTextField1.setText(title);
 
@@ -179,20 +184,37 @@ public class MyPostView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void updatePostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePostButtonActionPerformed
-        // TODO add your handling code here:
+        post = jTextArea1.getText();
+        boolean success = postPresenter.update(title, post, time); // 글 수정
+        
+        if (success) {
+            JOptionPane.showMessageDialog(getContentPane(), "수정 완료!");
+            this.setVisible(false);
+            viewPresenter.moveToMyView();
+        }
     }//GEN-LAST:event_updatePostButtonActionPerformed
 
     private void backwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backwardButtonActionPerformed
         isUndo = true;
-        state = originator.getState(isUndo);
+        state = originator.getState(isUndo); // 실행 취소
         jTextArea1.setText(state);
     }//GEN-LAST:event_backwardButtonActionPerformed
 
     private void forewardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forewardButtonActionPerformed
         isUndo = false;
-        state = originator.getState(isUndo);
+        state = originator.getState(isUndo); // 되돌리기
         jTextArea1.setText(state);
     }//GEN-LAST:event_forewardButtonActionPerformed
+
+    private void deletePostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePostButtonActionPerformed
+        boolean success = postPresenter.delete(title, user, time); // 글 삭제
+        
+        if (success) {
+            JOptionPane.showMessageDialog(getContentPane(), "삭제 완료!");
+            this.setVisible(false);
+            viewPresenter.moveToMyView();
+        }
+    }//GEN-LAST:event_deletePostButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

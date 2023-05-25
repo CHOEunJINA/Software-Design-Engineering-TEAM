@@ -20,6 +20,7 @@ public class MyView extends javax.swing.JFrame {
     private PostPresenter postPresenter = new PostPresenter();
     private ViewPresenter viewPresenter = new ViewPresenter();
     private JList list;
+    private String user = userPresenter.getCurrentUser();;
     /**
      * Creates new form MyView
      */
@@ -42,6 +43,7 @@ public class MyView extends javax.swing.JFrame {
         logOutButton = new javax.swing.JButton();
         deleteUserButton = new javax.swing.JButton();
         userLabel = new javax.swing.JLabel();
+        userInfoButton = new javax.swing.JButton();
         contentPanel = new javax.swing.JPanel();
         myPostScroller = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
@@ -59,6 +61,11 @@ public class MyView extends javax.swing.JFrame {
         });
 
         logOutButton.setLabel("로그아웃");
+        logOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logOutButtonActionPerformed(evt);
+            }
+        });
 
         deleteUserButton.setLabel("회원탈퇴");
         deleteUserButton.addActionListener(new java.awt.event.ActionListener() {
@@ -67,7 +74,14 @@ public class MyView extends javax.swing.JFrame {
             }
         });
 
-        userLabel.setText(userPresenter.getCurrentUser());
+        userLabel.setText(user + "님");
+
+        userInfoButton.setText("회원 정보");
+        userInfoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                userInfoButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
         menuPanel.setLayout(menuPanelLayout);
@@ -76,13 +90,15 @@ public class MyView extends javax.swing.JFrame {
             .addGroup(menuPanelLayout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(mainViewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(deleteUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
+                .addGap(12, 12, 12)
+                .addComponent(deleteUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(userInfoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(userLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(36, 36, 36))
         );
         menuPanelLayout.setVerticalGroup(
             menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -92,7 +108,8 @@ public class MyView extends javax.swing.JFrame {
                     .addComponent(mainViewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(deleteUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(userLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(userLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(userInfoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
@@ -118,7 +135,7 @@ public class MyView extends javax.swing.JFrame {
             .addGroup(contentPanelLayout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addComponent(myPostScroller, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jSeparator1)
         );
         contentPanelLayout.setVerticalGroup(
@@ -159,13 +176,26 @@ public class MyView extends javax.swing.JFrame {
 
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
         // TODO add your handling code here:
-        if (evt.getClickCount() == 2) {
+        if (evt.getClickCount() == 2) { // 더블 클릭시
             String title = (String) jList1.getSelectedValue();
-            String[] postInfo = title.split(",");
+            String[] postInfo = title.split(","); //제목, 작성자, 작성 시간으로 분리
             this.setVisible(false);
             viewPresenter.moveToMyPostView(postInfo);
         }  
     }//GEN-LAST:event_jList1MouseClicked
+
+    private void userInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userInfoButtonActionPerformed
+        this.setVisible(false);
+        viewPresenter.moveToMyInfoView(user);
+    }//GEN-LAST:event_userInfoButtonActionPerformed
+
+    private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        boolean success = userPresenter.logOut();
+        if (success) {
+            this.setVisible(false);
+            viewPresenter.moveToMainView();
+        }
+    }//GEN-LAST:event_logOutButtonActionPerformed
 
     
 
@@ -178,6 +208,7 @@ public class MyView extends javax.swing.JFrame {
     private javax.swing.JButton mainViewButton;
     private javax.swing.JPanel menuPanel;
     private javax.swing.JScrollPane myPostScroller;
+    private javax.swing.JButton userInfoButton;
     private javax.swing.JLabel userLabel;
     // End of variables declaration//GEN-END:variables
 }

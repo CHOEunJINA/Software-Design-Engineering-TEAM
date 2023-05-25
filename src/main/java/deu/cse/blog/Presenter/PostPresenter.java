@@ -67,4 +67,14 @@ public class PostPresenter {
         
         return stringList;
     }
+    
+    public String[] getResultPost(String search) {
+        List<String> list = postService.getResultPost(search);
+        String[] titles = new String[list.size()];
+        int i = 0;
+        for (String title : list) {
+            titles[i] = title;
+        }
+        return titles;
+    }   
 }

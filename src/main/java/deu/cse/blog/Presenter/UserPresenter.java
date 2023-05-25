@@ -45,8 +45,8 @@ public class UserPresenter {
         return userService.loadUserInfo();
     }
     
-    public boolean updateUser(String id, String name, String password, String gender) {
-        userService.updateUser(id, name, password, gender);
+    public boolean updateUser(String id, String password, String gender) {
+        userService.updateUser(id, password, gender);
         return true;
     }
     

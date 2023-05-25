@@ -5,12 +5,12 @@
 package deu.cse.blog.Model.Service;
 
 import deu.cse.blog.Model.Repository.MementoArchive;
-import deu.cse.blog.Model.Repository.Memento;
+import deu.cse.blog.Model.Memento;
 import java.util.Iterator;
 
 /**
- * 메멘토 패턴의 caretaker
- * @author bluev
+ * 메멘토 패턴의 caretaker, 이터레이터 패턴의 이터레이터, 출력을 관리 
+ * @author 강대한
  */
 public class MementoArchiveIterator implements Iterator<Memento>{
     private MementoArchive mementoArchive;

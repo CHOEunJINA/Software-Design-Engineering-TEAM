@@ -4,18 +4,18 @@
  */
 package deu.cse.blog.Presenter;
 
-import deu.cse.blog.Model.Repository.Memento;
+import deu.cse.blog.Model.Memento;
 import deu.cse.blog.Model.Service.MementoArchiveIterator;
 
 /**
- *
- * @author bluev
+ * 글 내용 입출력을 관리
+ * @author 강대한
  */
 public class Originator {
     private String state;
     private MementoArchiveIterator mementoArchiveIterator = new MementoArchiveIterator();
 
-    public void setState(String state) {
+    public void setState(String state) { // 글 내용 저장
         this.state = state;
         mementoArchiveIterator.add(saveStateToMemento());
     }
@@ -29,7 +29,7 @@ public class Originator {
         return state;
     }
     
-    public Memento saveStateToMemento() {
+    public Memento saveStateToMemento() { // 글 내용을 메멘토 객체로 변환
         return new Memento(state);
     }
     

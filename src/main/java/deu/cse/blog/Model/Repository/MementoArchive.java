@@ -4,7 +4,7 @@
  */
 package deu.cse.blog.Model.Repository;
 
-import deu.cse.blog.Model.Repository.Memento;
+import deu.cse.blog.Model.Memento;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

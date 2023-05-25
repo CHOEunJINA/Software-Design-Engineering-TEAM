@@ -87,6 +87,13 @@ public class PostService {
         }
         postRepository_.update(newJsonArr);
     }
+    
+    public ArrayList deleteByUserId(String userId) {
+        System.out.println("PostRepository deleteByUserId"+userId);
+
+        return postRepository_.deleteByUserId(userId);
+
+    }
 
     public String findPost(String title, String user, String time) {
         JSONArray jsonArr = postRepository_.getPostArray();
@@ -96,7 +103,8 @@ public class PostService {
         String post = (String) jsonObj.get("Post");
         return post;
     }
-
+    
+    
     public List<String> getMorePost() {
         List<String> list = new ArrayList<>();
         JSONArray jsonArr = postRepository_.getPostArray();
@@ -153,6 +161,22 @@ public class PostService {
                 index = indexList.get(k);
             }
             i++;
+        }
+        return list;
+    }
+    
+    public List<String> getResultPost(String search) {
+        List<String> list = new ArrayList<>();
+        JSONArray jsonArr = postRepository_.findPostBySearch(search);
+
+        for (Object obj : jsonArr) { // 
+            String temp = "";
+            JSONObject jsonObj = (JSONObject) obj;
+            List<String> timeList = (List<String>) jsonObj.get("TimeList");
+            int latestIndex = timeList.size() - 1;
+            String time = timeList.get(latestIndex);
+            temp = jsonObj.get("Title") + "," + jsonObj.get("User") + "," + time;
+            list.add(temp);
         }
         return list;
     }

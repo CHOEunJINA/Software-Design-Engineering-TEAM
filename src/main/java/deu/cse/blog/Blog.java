@@ -4,7 +4,7 @@
  */
 
 package deu.cse.blog;
-import deu.cse.blog.View.MyView;
+import deu.cse.blog.View.MainView;
 /**
  *
  * @author 강대한
@@ -12,6 +12,6 @@ import deu.cse.blog.View.MyView;
 public class Blog {
 
     public static void main(String[] args) {
-       new MyView(); //프로그램 실행시 메인 화면부터 
+       new MainView().setVisible(true); //프로그램 실행시 메인 화면부터 
     }
 }

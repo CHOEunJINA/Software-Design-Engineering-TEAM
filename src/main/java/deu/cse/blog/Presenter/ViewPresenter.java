@@ -17,11 +17,11 @@ public class ViewPresenter {
     }
     
     public void moveToMainView() {
-        new MainView();
+        new MainView().setVisible(true);
     }
     
     public void moveToMyView() {
-        new MyView();
+        new MyView().setVisible(true);
     }
     
     public void moveToLoginView() {
@@ -40,19 +40,19 @@ public class ViewPresenter {
         new MyPostView(postInfo).setVisible(true);
     }
     
-    public void moveToAnotherUserPostView() {
-        new AnotherUserPostView();
+    public void moveToAnotherUserPostView(String[] postInfo, String search) {
+        new AnotherUserPostView(postInfo, search).setVisible(true);
     }
     
     public void moveToMorePostView() {
         new MorePostView();
     }
     
-    public void moveToSearchView() {
-        new SearchView();
+    public void moveToSearchView(String search) {
+        new SearchView(search).setVisible(true);
     }
     
-    public void moveToMyInfoView() {
-        new MyInfoView();
+    public void moveToMyInfoView(String user) {
+        new MyInfoView(user).setVisible(true);
     }
 }

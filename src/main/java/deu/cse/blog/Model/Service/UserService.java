@@ -73,7 +73,7 @@ public class UserService {
         }
     }
     
-    public void deleteUser() {
+    public boolean deleteUser() {
         JSONArray jsonArr = userRepository_.getUserArray();
         
         int index = userRepository_.findIndex();
@@ -88,7 +88,8 @@ public class UserService {
             newJsonArr.add(jsonObj);
             i++;
         }
-        userRepository_.update(newJsonArr);
+        boolean success = userRepository_.update(newJsonArr);
+        return success;
     }
     
     public JSONObject loadUserInfo() {
@@ -98,10 +99,10 @@ public class UserService {
         return jsonObj;
     }
     
-    public void updateUser(String id, String name, String password, String gender) {
+    public void updateUser(String id, String password, String gender) {
         JSONArray jsonArr = userRepository_.getUserArray();
         JSONArray newJsonArr = new JSONArray();
-
+        String name = currentUser();
         User user = new User.Builder()
                 .userId(id)
                 .password(password)

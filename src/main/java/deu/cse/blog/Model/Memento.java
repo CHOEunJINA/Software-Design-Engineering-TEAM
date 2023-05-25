@@ -2,14 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package deu.cse.blog.Model.Repository;
+package deu.cse.blog.Model;
 
 /**
  *
- * @author bluev
+ * @author 강대한
  */
 public class Memento {
-    private String state;
+    private String state; // 글 내용
     
     public Memento(String state) {
         this.state = state;
