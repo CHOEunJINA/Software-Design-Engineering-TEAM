@@ -4,6 +4,7 @@
  */
 package deu.cse.blog.Model.Service;
 
+import deu.cse.blog.Model.Post;
 import deu.cse.blog.Model.Repository.PostRepository;
 import deu.cse.blog.Model.Repository.UserRepository;
 import java.time.LocalDate;
@@ -22,162 +23,63 @@ public class PostService {
     private PostRepository postRepository_ = PostRepository.postRepository();
     private UserRepository userRepository_ = UserRepository.userRepository();
 
-    public void createPost(String title, String post) {
-        JSONObject jsonObj = new JSONObject();
-        String user = userRepository_.getUser();
-        LocalDate dateNow = LocalDate.now();
-        LocalTime timeNow = LocalTime.now();
-        List<String> timeList = new ArrayList();
-        timeList.add(dateNow + " " + timeNow);
-        
-        jsonObj.put("Title", title);
-        jsonObj.put("Post", post);
-        jsonObj.put("User", user);
-        jsonObj.put("TimeList", timeList);
+    
+    public Boolean add(String title, String content, String author) {
 
-        postRepository_.create(jsonObj);
+        Post post = new Post.Builder()
+                .title(title)
+                .content(content)
+                .author(author)
+                .build();
+
+        // save 결과 리턴
+        return postRepository_.save(post);
     }
 
-    public void updatePost(String title, String post, String time) {
-        JSONArray jsonArr = postRepository_.getPostArray();
-        JSONArray newJsonArr = new JSONArray();
-        JSONObject jsonObj = new JSONObject();
-        String user = userRepository_.getUser();
-
-        LocalDate dateNow = LocalDate.now();
-        LocalTime timeNow = LocalTime.now();
-
-        jsonObj.put("Title", title);
-        jsonObj.put("Post", post);
-        jsonObj.put("User", user);
-
-        int index = postRepository_.findIndex(title, user, time);
-        int i = 0;
-        for (Object obj : jsonArr) {
-            JSONObject jsonObj2 = (JSONObject) obj;
-            if (i == index) {
-                List<String> timeList = (List<String>) jsonObj2.get("TimeList");
-                timeList.add(dateNow + " " + timeNow);
-                jsonObj.put("TimeList", timeList);
-                newJsonArr.add(jsonObj);
-                i++;
-                continue;
-            }
-            newJsonArr.add(jsonObj2);
-            i++;
-        }
-        postRepository_.update(newJsonArr);
+    public boolean updatePost(String title, String content, String author, String postID) {
+        Post post = new Post.Builder()
+                .title(title)
+                .content(content)
+                .author(author)
+                .build();
+        return postRepository_.update(post, postID);
     }
 
-    public void deletePost(String title, String post, String time) {
-        JSONArray jsonArr = postRepository_.getPostArray();
-        String user = userRepository_.getUser();
-        
-        int index = postRepository_.findIndex(title, user, time);
-        JSONArray newJsonArr = new JSONArray();
-        int i = 0;
-        for (Object obj : jsonArr) {
-            JSONObject jsonObj = (JSONObject) obj;
-            if (i == index) {
-                i++;
-                continue;
-            }
-            newJsonArr.add(jsonObj);
-            i++;
+    
+    public boolean delete(String postId) {
+
+        Post target = postRepository_.deleteById(postId);
+
+        // commentId, postId로 검색한 결과가 없으면 null 리턴
+        if (target == null) {
+            return false;
         }
-        postRepository_.update(newJsonArr);
+
+        return true;
     }
     
-    public ArrayList deleteByUserId(String userId) {
-        System.out.println("PostRepository deleteByUserId"+userId);
+    public ArrayList<Post> deleteByUserId(String userId) {
 
         return postRepository_.deleteByUserId(userId);
 
     }
-
-    public String findPost(String title, String user, String time) {
-        JSONArray jsonArr = postRepository_.getPostArray();
-        int index = postRepository_.findIndex(title, user, time);
-        Object obj = jsonArr.get(index);
-        JSONObject jsonObj = (JSONObject) obj;
-        String post = (String) jsonObj.get("Post");
-        return post;
-    }
     
-    
-    public List<String> getMorePost() {
-        List<String> list = new ArrayList<>();
+    public ArrayList<Post> findPostByName(String name) {
         JSONArray jsonArr = postRepository_.getPostArray();
+        ArrayList<Post> list = postRepository_.findPostByName(name);
 
-        for (Object obj : jsonArr) { // 
-            String temp = "";
-            JSONObject jsonObj = (JSONObject) obj;
-            List<String> timeList = (List<String>) jsonObj.get("TimeList");
-            int latestIndex = timeList.size() - 1;
-            String time = timeList.get(latestIndex);
-            temp = jsonObj.get("Title") + "," + jsonObj.get("User") + "," + time;
-            list.add(temp);
-        }
-        return list;
-    }
-
-    public List<String> getLatestPost() {
-        List<String> list = new ArrayList<>();
-        JSONArray jsonArr = postRepository_.getPostArray();
-
-        for (int i = 1; i <= 5; i++) { // 최신 글의 제목과 작성자를 가져온다.
-            String temp = "";
-            JSONObject jsonObj = (JSONObject) jsonArr.get(jsonArr.size() - i);
-            List<String> timeList = (List<String>) jsonObj.get("TimeList");
-            int latestIndex = timeList.size() - 1;
-            String time = timeList.get(latestIndex);
-            temp = jsonObj.get("Title") + "," + jsonObj.get("User") + "," + time;
-            list.add(temp);
-        }
         return list;
     }
     
-    public List<String> getMyPost() {
-        String user = userRepository_.getUser();
-        List<String> list = new ArrayList<>();
-        JSONArray jsonArr = postRepository_.getPostArray();
-        List<Integer> indexList = postRepository_.findUserPostIndex(user);
-        int i = 0;
-        int k = 0;
-        int index = indexList.get(k);
-        for (Object obj : jsonArr) { // 
-            if (i == index) {
-                String temp = "";
-                JSONObject jsonObj = (JSONObject) obj;
-                List<String> timeList = (List<String>) jsonObj.get("TimeList");
-                int latestIndex = timeList.size() - 1;
-                String time = timeList.get(latestIndex);
-                temp = jsonObj.get("Title") + "," + jsonObj.get("User") + "," + time;
-                list.add(temp);
-                k++;
-                if (k == indexList.size()) {
-                    break;
-                }
-                index = indexList.get(k);
-            }
-            i++;
-        }
-        return list;
+    public ArrayList<Post> getResultPost(String search) {
+        return postRepository_.findPostBySearch(search);
     }
     
-    public List<String> getResultPost(String search) {
-        List<String> list = new ArrayList<>();
-        JSONArray jsonArr = postRepository_.findPostBySearch(search);
+    public ArrayList<Post> findAll() {
 
-        for (Object obj : jsonArr) { // 
-            String temp = "";
-            JSONObject jsonObj = (JSONObject) obj;
-            List<String> timeList = (List<String>) jsonObj.get("TimeList");
-            int latestIndex = timeList.size() - 1;
-            String time = timeList.get(latestIndex);
-            temp = jsonObj.get("Title") + "," + jsonObj.get("User") + "," + time;
-            list.add(temp);
-        }
-        return list;
+        ArrayList<Post> target = postRepository_.findAll();
+
+        return target;
+
     }
 }

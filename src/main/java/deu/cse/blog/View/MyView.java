@@ -1,31 +1,38 @@
 package deu.cse.blog.View;
 
+import deu.cse.blog.Model.Post;
 import deu.cse.blog.Presenter.UserPresenter;
 import deu.cse.blog.Presenter.PostPresenter;
 import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.DataParser;
+import deu.cse.blog.Utils.JTableSetting;
+import java.util.ArrayList;
 import javax.swing.JList;
-import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author 강대한
  */
 public class MyView extends javax.swing.JFrame {
+
     private UserPresenter userPresenter = new UserPresenter();
     private PostPresenter postPresenter = new PostPresenter();
     private ViewPresenter viewPresenter = new ViewPresenter();
     private JList list;
-    private String user = userPresenter.getCurrentUser();;
+    private String user = UserSession.getSession();
+    private ArrayList<Post> posts;
+
     /**
      * Creates new form MyView
      */
     public MyView() {
         initComponents();
+        setLocationRelativeTo(null); // 중앙 정렬
         setVisible(true);
     }
 
@@ -46,7 +53,7 @@ public class MyView extends javax.swing.JFrame {
         userInfoButton = new javax.swing.JButton();
         contentPanel = new javax.swing.JPanel();
         myPostScroller = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        myPostTable = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -115,36 +122,58 @@ public class MyView extends javax.swing.JFrame {
 
         logOutButton.getAccessibleContext().setAccessibleDescription("");
 
-        String[] titles = postPresenter.getMyPost();
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = titles;
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList1MouseClicked(evt);
+        myPostScroller.setBackground(new java.awt.Color(255, 255, 255, 0));
+
+        myPostScroller.setOpaque(false);
+
+        myPostTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "순서", "제목", "작성자", "조회수"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        myPostScroller.setViewportView(jList1);
+        JTableSetting.tableInit(myPostScroller, myPostTable);
+        JTableSetting.tableHeaderInit(myPostTable, 900, 100);
+        JTableSetting.postTableSetting(myPostTable);
+        posts = postPresenter.getMyPost();
+        JTableSetting.insertTableRow((DefaultTableModel) myPostTable.getModel(), DataParser.postsToObject(posts));
+
+        myPostTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                myPostTableMouseClicked(evt);
+            }
+        });
+        myPostScroller.setViewportView(myPostTable);
 
         javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
         contentPanel.setLayout(contentPanelLayout);
         contentPanelLayout.setHorizontalGroup(
             contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contentPanelLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(myPostScroller, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jSeparator1)
+                .addGap(522, 522, 522)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
+            .addGroup(contentPanelLayout.createSequentialGroup()
+                .addComponent(myPostScroller, javax.swing.GroupLayout.PREFERRED_SIZE, 565, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         contentPanelLayout.setVerticalGroup(
             contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(myPostScroller, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
-                .addComponent(myPostScroller, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addGap(449, 449, 449))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -166,48 +195,56 @@ public class MyView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mainViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mainViewButtonActionPerformed
-        this.setVisible(false);
-        new MainView().setVisible(true);
+
+        setVisible(false);
+        dispose();
+        viewPresenter.moveToMainView(user);
     }//GEN-LAST:event_mainViewButtonActionPerformed
+    
+    private void myPostTableMouseClicked(java.awt.event.MouseEvent evt) {                                       
+        // TODO add your handling code here:
+        int row = myPostTable.getSelectedRow();
+        Post selectedPost = posts.get(row);
+
+        this.setVisible(false);
+        dispose();
+        viewPresenter.moveToMyPostView(selectedPost);
+    }  
 
     private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
-        
+        this.setVisible(false);
+        dispose();
+        viewPresenter.moveToDeleteInfoView();
     }//GEN-LAST:event_deleteUserButtonActionPerformed
-
-    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-        // TODO add your handling code here:
-        if (evt.getClickCount() == 2) { // 더블 클릭시
-            String title = (String) jList1.getSelectedValue();
-            String[] postInfo = title.split(","); //제목, 작성자, 작성 시간으로 분리
-            this.setVisible(false);
-            viewPresenter.moveToMyPostView(postInfo);
-        }  
-    }//GEN-LAST:event_jList1MouseClicked
 
     private void userInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userInfoButtonActionPerformed
         this.setVisible(false);
-        viewPresenter.moveToMyInfoView(user);
+        dispose();
+        viewPresenter.moveToMyInfoView();
     }//GEN-LAST:event_userInfoButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
         boolean success = userPresenter.logOut();
+
         if (success) {
+            UserSession.setSession("");
+            String userID = UserSession.getSession();
             this.setVisible(false);
-            viewPresenter.moveToMainView();
+            dispose();
+            viewPresenter.moveToMainView(userID);
         }
     }//GEN-LAST:event_logOutButtonActionPerformed
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;
     private javax.swing.JButton deleteUserButton;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton logOutButton;
     private javax.swing.JButton mainViewButton;
     private javax.swing.JPanel menuPanel;
     private javax.swing.JScrollPane myPostScroller;
+    private javax.swing.JTable myPostTable;
     private javax.swing.JButton userInfoButton;
     private javax.swing.JLabel userLabel;
     // End of variables declaration//GEN-END:variables

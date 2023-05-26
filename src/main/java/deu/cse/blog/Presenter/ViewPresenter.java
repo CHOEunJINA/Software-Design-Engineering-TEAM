@@ -4,7 +4,7 @@
  */
 package deu.cse.blog.Presenter;
 
-import deu.cse.blog.View.MorePostView;
+import deu.cse.blog.Model.Post;
 import deu.cse.blog.View.*;
 
 /**
@@ -16,12 +16,20 @@ public class ViewPresenter {
     public ViewPresenter() {
     }
     
-    public void moveToMainView() {
-        new MainView().setVisible(true);
+    public void moveToMainView() {  
+        
+    }
+    
+    public void moveToMainView(String userID) {
+        if (userID.equals("")) {
+            new MainView();
+        } else {
+            new MainView(userID);
+        }    
     }
     
     public void moveToMyView() {
-        new MyView().setVisible(true);
+        new MyView();
     }
     
     public void moveToLoginView() {
@@ -32,27 +40,27 @@ public class ViewPresenter {
         new SignUpView();
     }
     
-    public void moveToPostView() {
-        new PostView();
+    public void moveToPostWriteView() {
+        new PostWriteView();
     }
     
-    public void moveToMyPostView(String[] postInfo)  {
-        new MyPostView(postInfo).setVisible(true);
+    public void moveToMyPostView(Post selectedPost)  {
+        new MyPostView(selectedPost);
     }
     
-    public void moveToAnotherUserPostView(String[] postInfo, String search) {
-        new AnotherUserPostView(postInfo, search).setVisible(true);
-    }
-    
-    public void moveToMorePostView() {
-        new MorePostView();
+    public void moveToCheckPostView(Post selectedPost) {
+        new CheckPostView(selectedPost);
     }
     
     public void moveToSearchView(String search) {
-        new SearchView(search).setVisible(true);
+        new SearchView(search);
     }
     
-    public void moveToMyInfoView(String user) {
-        new MyInfoView(user).setVisible(true);
+    public void moveToMyInfoView() {
+        new MyInfoView();
+    }
+    
+    public void moveToDeleteInfoView() {
+        new DeleteInfoView();
     }
 }

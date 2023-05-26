@@ -24,12 +24,12 @@ public class UserService {
 
     public Boolean signUp(String id, String name, String password, String passwordConfirm, String gender) {
         // 전달 받은 id로 유저 검색
-        User target = userRepository_.findById(id);
-        System.out.println("TARGET SignUP: "+target);
+        User targetID = userRepository_.findById(id);
+        User targetName = userRepository_.findByName(name);
 
-        // 이미 있는 ID 정보
-        if (target != null) {
-            return null;
+        // 이미 있는 ID, name 정보
+        if (targetID != null || targetName != null) {
+            return false;
         }
 
         // ID 정보가 없으면 userRepository한테 User정보 저장 요청
@@ -45,7 +45,7 @@ public class UserService {
         return userRepository_.save(user);
     } //회원가입시 Repository에 요청하기 -> 이미 있는 회원인지 확인을 한다.
 
-    public Boolean login(String id, String password) {
+    public User login(String id, String password) {
 
         // 로그인한 사용자의 정보를 id를 통해 가져옴
         User target = userRepository_.findById(id);
@@ -61,7 +61,7 @@ public class UserService {
             return null;
         }
         userRepository_.setUser(target.getName());
-        return true;
+        return target;
     }
     
     public boolean logOut() {
@@ -88,40 +88,24 @@ public class UserService {
             newJsonArr.add(jsonObj);
             i++;
         }
-        boolean success = userRepository_.update(newJsonArr);
+        boolean success = userRepository_.delete();
         return success;
     }
     
-    public JSONObject loadUserInfo() {
-        JSONArray jsonArr = userRepository_.getUserArray();
-        int index = userRepository_.findIndex();
-        JSONObject jsonObj = (JSONObject) jsonArr.get(index);
-        return jsonObj;
+    public User loadUserInfo() {
+        String name = userRepository_.getUser();
+        return userRepository_.findByName(name);
     }
     
-    public void updateUser(String id, String password, String gender) {
-        JSONArray jsonArr = userRepository_.getUserArray();
-        JSONArray newJsonArr = new JSONArray();
-        String name = currentUser();
+    public boolean updateUser(String id, String password, String gender, String name) {
         User user = new User.Builder()
                 .userId(id)
                 .password(password)
                 .name(name)
                 .gender(gender)
                 .build();
-        int index = userRepository_.findIndex();
-        int i = 0;
-        for (Object obj : jsonArr) {
-            JSONObject jsonObj = (JSONObject) obj;
-            if (i == index) {
-                newJsonArr.add(user.toJson());
-                i++;
-                continue;
-            }
-            newJsonArr.add(jsonObj);
-            i++;
-        }
-        userRepository_.update(newJsonArr);
+        
+        return userRepository_.update(user, name);
     }
     
     public String currentUser() {

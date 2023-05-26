@@ -6,6 +6,7 @@
 package deu.cse.blog.View;
 
 import deu.cse.blog.Presenter.UserPresenter;
+import deu.cse.blog.Presenter.ViewPresenter;
 import javax.swing.JOptionPane;
 import deu.cse.blog.View.MainView;
 
@@ -14,7 +15,8 @@ import deu.cse.blog.View.MainView;
  * @author 조은진
  */
 public class LoginView extends javax.swing.JFrame {
-
+    private ViewPresenter viewPresenter = new ViewPresenter();
+    public String result;
 
     /**
      * Creates new form NewJFrame
@@ -165,16 +167,21 @@ public class LoginView extends javax.swing.JFrame {
         String id = idField.getText();
         String pw = new String(pwField.getPassword());
         UserPresenter userpresenter = new UserPresenter();
-        
-        String result=userpresenter.loginUser(id, pw);
-        
-        if (result==id && result!=null) {
+
+        result = userpresenter.loginUser(id.trim(), pw.trim());
+
+        if (result != null) {
+            UserSession.setSession(result);
             JOptionPane.showMessageDialog(getContentPane(), "로그인에 성공하였습니다.");
-            new MainView(result);
-            setVisible(false);   
+            setVisible(false);
+            dispose();
+            viewPresenter.moveToMainView(result);
 
         } else {
             JOptionPane.showMessageDialog(getContentPane(), "로그인에 실패하였습니다.");
+            setVisible(false);
+            dispose();
+            viewPresenter.moveToLoginView();
         }
     }//GEN-LAST:event_signInButtonMouseClicked
     // 블로그 홈 버튼 클릭 시
@@ -182,7 +189,7 @@ public class LoginView extends javax.swing.JFrame {
         // TODO add your handling code here:
         new MainView();
         setVisible(false);
-        
+
     }//GEN-LAST:event_mainPageButtonMouseClicked
     // 회원가입 버튼 클릭 시
     private void signUpButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signUpButtonMouseClicked

@@ -12,6 +12,6 @@ import deu.cse.blog.View.MainView;
 public class Blog {
 
     public static void main(String[] args) {
-       new MainView().setVisible(true); //프로그램 실행시 메인 화면부터 
+       new MainView(); //프로그램 실행시 메인 화면부터 
     }
 }

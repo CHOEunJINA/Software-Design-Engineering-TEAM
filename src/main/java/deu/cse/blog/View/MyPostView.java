@@ -4,9 +4,11 @@
  */
 package deu.cse.blog.View;
 
+import deu.cse.blog.Model.Post;
 import deu.cse.blog.Presenter.Originator;
 import deu.cse.blog.Presenter.PostPresenter;
 import deu.cse.blog.Presenter.ViewPresenter;
+import java.util.ArrayList;
 import java.util.TimerTask;
 import java.util.Timer;
 import javax.swing.JOptionPane;
@@ -17,15 +19,16 @@ import javax.swing.JOptionPane;
  */
 public class MyPostView extends javax.swing.JFrame {
 
-    private String title;
-    private String post;
-    private String user;
-    private String time;
+    private ArrayList<Post> posts;
     private PostPresenter postPresenter = new PostPresenter();
     private ViewPresenter viewPresenter = new ViewPresenter();
     private Originator originator = new Originator();
     private boolean isUndo;
+    private String title;
+    private String content;
     private String state;
+    private String postID;
+
     /**
      * Creates new form MyPostView
      */
@@ -33,20 +36,21 @@ public class MyPostView extends javax.swing.JFrame {
         initComponents();
     }
 
-    public MyPostView(String[] postInfo) {
-
-        title = postInfo[0]; 
-        user = postInfo[1];
-        time = postInfo[2];
-        post = postPresenter.loadPost(title, user, time); // 글 내용 불러오기
-        state = post;
+    public MyPostView(Post selectedPost) {
+        state = selectedPost.getContent();
+        postID = selectedPost.getPostId();
+        title = selectedPost.getTitle();
+        content = selectedPost.getContent();
+        originator.setState(state);
         Timer m = new Timer();
         initComponents();
+        setLocationRelativeTo(null); // 중앙 정렬
+        setVisible(true);
         TimerTask task = new TimerTask() { // 글의 내용이 바뀌어질 때 마다 글 내용 저장
             @Override
             public void run() {
-                if (!state.equals(jTextArea1.getText())) {
-                    state = jTextArea1.getText();
+                if (!state.equals(contentArea.getText())) {
+                    state = contentArea.getText();
                     originator.setState(state);
                 }
             }
@@ -67,17 +71,22 @@ public class MyPostView extends javax.swing.JFrame {
         myViewButton = new javax.swing.JButton();
         updatePostButton = new javax.swing.JButton();
         deletePostButton = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
         backwardButton = new javax.swing.JButton();
         forewardButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        contentArea = new javax.swing.JTextArea();
+        titleField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         myViewButton.setText("내블로그");
         myViewButton.setAutoscrolls(true);
+        myViewButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                myViewButtonMouseClicked(evt);
+            }
+        });
 
         updatePostButton.setText("수정");
         updatePostButton.addActionListener(new java.awt.event.ActionListener() {
@@ -92,8 +101,6 @@ public class MyPostView extends javax.swing.JFrame {
                 deletePostButtonActionPerformed(evt);
             }
         });
-
-        jTextField1.setText(title);
 
         backwardButton.setText("");
         backwardButton.addActionListener(new java.awt.event.ActionListener() {
@@ -125,10 +132,6 @@ public class MyPostView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(deletePostButton)
                 .addGap(48, 48, 48))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTextField1)
-                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,14 +143,13 @@ public class MyPostView extends javax.swing.JFrame {
                     .addComponent(deletePostButton)
                     .addComponent(backwardButton)
                     .addComponent(forewardButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setText(post);
-        jScrollPane1.setViewportView(jTextArea1);
+        contentArea.setColumns(20);
+        contentArea.setRows(5);
+        contentArea.setText(content);
+        jScrollPane1.setViewportView(contentArea);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -165,17 +167,25 @@ public class MyPostView extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        titleField.setText(title);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(titleField)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(titleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -184,12 +194,15 @@ public class MyPostView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void updatePostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePostButtonActionPerformed
-        post = jTextArea1.getText();
-        boolean success = postPresenter.update(title, post, time); // 글 수정
-        
+        String post = contentArea.getText();
+        String title = titleField.getText();
+        String name = UserSession.getSession();
+        boolean success = postPresenter.update(title, post, name, postID); // 글 수정
+
         if (success) {
             JOptionPane.showMessageDialog(getContentPane(), "수정 완료!");
             this.setVisible(false);
+            dispose();
             viewPresenter.moveToMyView();
         }
     }//GEN-LAST:event_updatePostButtonActionPerformed
@@ -197,36 +210,43 @@ public class MyPostView extends javax.swing.JFrame {
     private void backwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backwardButtonActionPerformed
         isUndo = true;
         state = originator.getState(isUndo); // 실행 취소
-        jTextArea1.setText(state);
+        contentArea.setText(state);
     }//GEN-LAST:event_backwardButtonActionPerformed
 
     private void forewardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forewardButtonActionPerformed
         isUndo = false;
         state = originator.getState(isUndo); // 되돌리기
-        jTextArea1.setText(state);
+        contentArea.setText(state);
     }//GEN-LAST:event_forewardButtonActionPerformed
 
     private void deletePostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePostButtonActionPerformed
-        boolean success = postPresenter.delete(title, user, time); // 글 삭제
-        
+        boolean success = postPresenter.delete(postID); // 글 삭제
+
         if (success) {
             JOptionPane.showMessageDialog(getContentPane(), "삭제 완료!");
             this.setVisible(false);
+            dispose();
             viewPresenter.moveToMyView();
         }
     }//GEN-LAST:event_deletePostButtonActionPerformed
 
+    private void myViewButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myViewButtonMouseClicked
+        this.setVisible(false);
+        dispose();
+        viewPresenter.moveToMyView();
+    }//GEN-LAST:event_myViewButtonMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backwardButton;
+    private javax.swing.JTextArea contentArea;
     private javax.swing.JButton deletePostButton;
     private javax.swing.JButton forewardButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton myViewButton;
+    private javax.swing.JTextField titleField;
     private javax.swing.JButton updatePostButton;
     // End of variables declaration//GEN-END:variables
 }

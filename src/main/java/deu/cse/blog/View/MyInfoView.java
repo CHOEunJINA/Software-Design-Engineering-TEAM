@@ -4,35 +4,38 @@
  */
 package deu.cse.blog.View;
 
+import deu.cse.blog.Model.User;
 import deu.cse.blog.Presenter.UserPresenter;
 import deu.cse.blog.Presenter.ViewPresenter;
 import javax.swing.JOptionPane;
-import org.json.simple.JSONObject;
 
 /**
  *
  * @author 강대한
  */
 public class MyInfoView extends javax.swing.JFrame {
+
     private UserPresenter userPresenter = new UserPresenter();
     private ViewPresenter viewPresenter = new ViewPresenter();
-    private String user;
+    private String name;
     private String id;
     private String gender;
+
     /**
      * Creates new form MyInfoView
      */
+
     public MyInfoView() {
+
+        User user = userPresenter.loadUserInfo(); // 유저 정보 불러오기
+        id = user.getUserId();
+        gender = user.getGender();
+        name = user.getName();
         initComponents();
+        setLocationRelativeTo(null); // 중앙 정렬
+        setVisible(true);
     }
-    
-    public MyInfoView(String user) {
-        this.user = user;
-        JSONObject jsonObj = userPresenter.loadUserInfo(); // 유저 정보 불러오기
-        id = (String) jsonObj.get("ID");
-        gender = (String) jsonObj.get("Gender");
-        initComponents();
-    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,8 +48,6 @@ public class MyInfoView extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         buttonGroup3 = new javax.swing.ButtonGroup();
-        jPanel1 = new javax.swing.JPanel();
-        userLabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         idTextField = new javax.swing.JTextField();
         passwordField = new javax.swing.JPasswordField();
@@ -58,27 +59,10 @@ public class MyInfoView extends javax.swing.JFrame {
         idLabel = new javax.swing.JLabel();
         passwordLabel = new javax.swing.JLabel();
         confirmPasswordLabel = new javax.swing.JLabel();
+        nameField = new javax.swing.JTextField();
+        nameLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        userLabel.setText(user + "님");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(userLabel)
-                .addGap(44, 44, 44))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
-                .addComponent(userLabel)
-                .addGap(16, 16, 16))
-        );
 
         idTextField.setText(id);
         idTextField.setEditable(false);
@@ -114,23 +98,16 @@ public class MyInfoView extends javax.swing.JFrame {
 
         confirmPasswordLabel.setText("비밀번호 확인");
 
+        nameField.setText(name);
+
+        nameLabel.setText("닉네임");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(passwordLabel)
-                            .addComponent(idLabel)
-                            .addComponent(confirmPasswordLabel))
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(idTextField)
-                            .addComponent(passwordField)
-                            .addComponent(confirmPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(94, 94, 94)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -139,7 +116,20 @@ public class MyInfoView extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(femaleRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(updateInfoButton))))
+                            .addComponent(updateInfoButton)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(passwordLabel)
+                            .addComponent(idLabel)
+                            .addComponent(confirmPasswordLabel)
+                            .addComponent(nameLabel))
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(nameField)
+                            .addComponent(idTextField)
+                            .addComponent(passwordField)
+                            .addComponent(confirmPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE))))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -157,7 +147,11 @@ public class MyInfoView extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(confirmPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(confirmPasswordLabel))
-                .addGap(36, 36, 36)
+                .addGap(7, 7, 7)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(femaleRadioButton)
                     .addComponent(maleRadioButton))
@@ -165,22 +159,18 @@ public class MyInfoView extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(updateInfoButton))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(112, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -188,6 +178,7 @@ public class MyInfoView extends javax.swing.JFrame {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         this.setVisible(false);
+        dispose();
         viewPresenter.moveToMyView();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
@@ -195,17 +186,26 @@ public class MyInfoView extends javax.swing.JFrame {
 
         String pwd = new String(passwordField.getPassword()).trim(); // 공백 제거
         String pwdConfirmed = new String(confirmPasswordField.getPassword()).trim();
+        String name = nameField.getText().trim();
         if (maleRadioButton.isSelected()) {
             gender = maleRadioButton.getText(); // 남성
         } else {
             gender = femaleRadioButton.getText(); // 여성
         }
-        if (pwd.equals(pwdConfirmed) && !pwd.equals("")) {
-            userPresenter.updateUser(id, pwd, gender); // 유저 정보 수정
-            JOptionPane.showMessageDialog(getContentPane(), "수정 완료!");
-            this.setVisible(false);
-            viewPresenter.moveToMyView();
-        }     
+        if (pwd.equals(pwdConfirmed) && !pwd.equals("") && !name.equals("")) {
+            
+            boolean success = userPresenter.updateUser(id, pwd, gender, name); // 유저 정보 수정
+            if (success) {
+                UserSession.setSession(name);
+                JOptionPane.showMessageDialog(getContentPane(), "수정 완료!");
+                this.setVisible(false);
+                dispose();
+                viewPresenter.moveToMyView();
+            } else {
+                JOptionPane.showMessageDialog(getContentPane(), "수정 실패!");
+            }
+
+        }
     }//GEN-LAST:event_updateInfoButtonActionPerformed
 
 
@@ -219,12 +219,12 @@ public class MyInfoView extends javax.swing.JFrame {
     private javax.swing.JRadioButton femaleRadioButton;
     private javax.swing.JLabel idLabel;
     private javax.swing.JTextField idTextField;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton maleRadioButton;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JLabel nameLabel;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JButton updateInfoButton;
-    private javax.swing.JLabel userLabel;
     // End of variables declaration//GEN-END:variables
 }

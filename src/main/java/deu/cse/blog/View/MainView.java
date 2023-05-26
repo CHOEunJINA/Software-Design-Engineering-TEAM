@@ -5,28 +5,73 @@
  */
 package deu.cse.blog.View;
 
+import deu.cse.blog.Model.Post;
+import deu.cse.blog.Presenter.PostPresenter;
+import deu.cse.blog.Presenter.UserPresenter;
+import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.DataParser;
+import deu.cse.blog.Utils.JTableSetting;
+import java.awt.Color;
+import java.util.ArrayList;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
- *
+ * 블로그 홈페이지
  * @author 조은진
  */
 public class MainView extends javax.swing.JFrame {
 
+    private JScrollPane scrollPane = new JScrollPane();
+    private ArrayList<Post> posts;
+    private String userID = UserSession.getSession();
+    private PostPresenter postPresenter = new PostPresenter();
+    private UserPresenter userPresenter = new UserPresenter();
+    private ViewPresenter viewPresenter = new ViewPresenter();
+
+    /**
+     * Creates new form MainView
+     */
     public MainView() {
         initComponents();
-        setLocationRelativeTo(null); // �߾� ����
+        layoutInit();
+
+        setLocationRelativeTo(null); // 중앙 정렬
+
+        myblogButton.setVisible(false);
+        myblogButton.setEnabled(false);
+        
         setVisible(true);
-        logoutButton.setVisible(false);
-        logoutButton.setEnabled(false);
     }
-    public MainView(String result){
+
+    public MainView(String userID) {
         initComponents();
-        setLocationRelativeTo(null); // �߾� ����
-        loginButton.setVisible(false);
-        loginButton.setEnabled(false);
-        logoutButton.setEnabled(true);
-        logoutButton.setVisible(true);
-        userid.setText(result+"��");
+        layoutInit();
+
+        setLocationRelativeTo(null); // 중앙 정렬
+        myblogButton.setVisible(true);
+        myblogButton.setEnabled(true);
+        useridLabel.setText(userID + "님");
+        
         setVisible(true);
+    }
+
+    public void layoutInit() {
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
     }
 
     /**
@@ -39,264 +84,218 @@ public class MainView extends javax.swing.JFrame {
     private void initComponents() {
 
         menuPanel = new javax.swing.JPanel();
-        userid = new javax.swing.JLabel();
-        logoutButton = new javax.swing.JButton();
+        useridLabel = new javax.swing.JLabel();
+        logButton = new javax.swing.JButton();
         postpageButton = new javax.swing.JButton();
         myblogButton = new javax.swing.JButton();
         loginButton = new javax.swing.JButton();
         searchBox = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        contentPanel = new javax.swing.JPanel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        postScrollPane = new javax.swing.JScrollPane();
+        postTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("��α�");
-        setSize(new java.awt.Dimension(900, 1000));
+        setTitle("블로그");
+        setSize(new java.awt.Dimension(900, 900));
 
         menuPanel.setBackground(new java.awt.Color(255, 255, 255));
         menuPanel.setMaximumSize(new java.awt.Dimension(900, 150));
         menuPanel.setPreferredSize(new java.awt.Dimension(813, 643));
+        menuPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        userid.setFont(new java.awt.Font("���� ���", 0, 14)); // NOI18N
-        userid.setText("    ");
+        useridLabel.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        useridLabel.setText("    ");
+        menuPanel.add(useridLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
-        logoutButton.setFont(new java.awt.Font("���� ���", 0, 14)); // NOI18N
-        logoutButton.setText("�α׾ƿ�");
-        logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                logoutButtonMouseClicked(evt);
+        logButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        String state;
+        if (userID.equals("")) {
+            state = "로그인";
+        } else {
+            state = "로그아웃";
+        }
+        logButton.setText(state);
+        logButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logButtonActionPerformed(evt);
             }
         });
+        menuPanel.add(logButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 50, 150, 50));
 
-        postpageButton.setFont(new java.awt.Font("���� ���", 0, 14)); // NOI18N
-        postpageButton.setText("�۾���");
+        postpageButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        postpageButton.setText("글쓰기");
         postpageButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 postpageButtonMouseClicked(evt);
             }
         });
+        menuPanel.add(postpageButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 50, 130, 50));
 
-        myblogButton.setFont(new java.awt.Font("���� ���", 0, 14)); // NOI18N
-        myblogButton.setText("�� ��α�");
-        myblogButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                myblogButtonMouseClicked(evt);
+        myblogButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        myblogButton.setText("내 블로그");
+        myblogButton.setEnabled(false);
+        myblogButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                myblogButtonActionPerformed(evt);
             }
         });
+        menuPanel.add(myblogButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 130, 50));
 
-        loginButton.setFont(new java.awt.Font("���� ���", 0, 14)); // NOI18N
-        loginButton.setText("�α���");
+        loginButton.setFont(new java.awt.Font("맑은 고딕", 0, 14)); // NOI18N
+        loginButton.setText("로그인");
         loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 loginButtonMouseClicked(evt);
             }
         });
+        menuPanel.add(loginButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 50, 150, 50));
 
         searchBox.setPreferredSize(new java.awt.Dimension(7, 30));
+        menuPanel.add(searchBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 60, 310, -1));
 
-        searchButton.setText("?");
+        searchButton.setText("🔍");
         searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 searchButtonMouseClicked(evt);
             }
         });
-        searchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchButtonActionPerformed(evt);
+        menuPanel.add(searchButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 60, 50, 30));
+        menuPanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, 120, 20));
+
+        postScrollPane.setBackground(new java.awt.Color(255, 255, 255, 0));
+        postScrollPane.setOpaque(false);
+
+        postTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "순서", "제목", "작성자", "조회수"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-
-        jLabel1.setText("jLabel1");
-
-        javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
-        menuPanel.setLayout(menuPanelLayout);
-        menuPanelLayout.setHorizontalGroup(
-            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
-                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(myblogButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addComponent(postpageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(menuPanelLayout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(18, 18, 18)
-                        .addComponent(searchBox, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE))
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(searchButton)
-                .addContainerGap())
-        );
-        menuPanelLayout.setVerticalGroup(
-            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menuPanelLayout.createSequentialGroup()
-                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(menuPanelLayout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(myblogButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(postpageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(searchBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        contentPanel.setBackground(new java.awt.Color(255, 255, 255));
-        contentPanel.setMaximumSize(new java.awt.Dimension(900, 850));
-
-        jButton1.setText("������");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        JTableSetting.tableInit(postScrollPane, postTable);
+        JTableSetting.tableHeaderInit(postTable, 900, 100);
+        JTableSetting.postTableSetting(postTable);
+        posts = postPresenter.findAll();
+        JTableSetting.insertTableRow((DefaultTableModel) postTable.getModel(), DataParser.postsToObject(posts));
+        postTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                postTableMouseClicked(evt);
             }
         });
-
-        jLabel2.setText("�ֽű�");
-
-        jButton2.setText("jButton2");
-
-        jButton3.setText("jButton3");
-
-        jButton4.setText("jButton4");
-
-        jButton5.setText("jButton5");
-
-        jButton6.setText("jButton6");
-
-        javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
-        contentPanel.setLayout(contentPanelLayout);
-        contentPanelLayout.setHorizontalGroup(
-            contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(contentPanelLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(contentPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
-                        .addComponent(jButton1))
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        contentPanelLayout.setVerticalGroup(
-            contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(contentPanelLayout.createSequentialGroup()
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
-                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton6)
-                .addGap(0, 220, Short.MAX_VALUE))
-        );
+        postScrollPane.setViewportView(postTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(contentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(menuPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
+                    .addComponent(postScrollPane))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(menuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(contentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(menuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(postScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 850, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    // �� ��α� ��ư Ŭ�� ��
-    private void myblogButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myblogButtonMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_myblogButtonMouseClicked
-    // �۾��� ��ư Ŭ�� ��
+
+    // 글쓰기 버튼 클릭 시
     private void postpageButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postpageButtonMouseClicked
-        // TODO add your handling code here:
-        new PostView();
-        setVisible(false);
+
+        if (userID == null) {
+            this.setVisible(false);
+            dispose();
+            viewPresenter.moveToLoginView();
+        } else {
+            this.setVisible(false);
+            dispose();
+            viewPresenter.moveToPostWriteView();
+        }
     }//GEN-LAST:event_postpageButtonMouseClicked
-    // �α��� ��ư Ŭ�� ��
+    // 로그인 버튼 클릭 시
     private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseClicked
-        // TODO add your handling code here:
-        new LoginView();
-        setVisible(false);
+
     }//GEN-LAST:event_loginButtonMouseClicked
-    // �˻� ��ư Ŭ�� ��
+    // 검색 버튼 클릭 시
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
-        // TODO add your handling code here:
+        String text = searchBox.getText();
+        this.setVisible(false);
+        dispose();
+        viewPresenter.moveToSearchView(text);
     }//GEN-LAST:event_searchButtonMouseClicked
-    // �α׾ƿ� ��ư ������ ��
-    private void logoutButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseClicked
-        // TODO add your handling code here:
-        
-        
-    }//GEN-LAST:event_logoutButtonMouseClicked
 
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+    // 내블로그 버튼 클릭 시
+    private void myblogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myblogButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_searchButtonActionPerformed
+        if (userID != null) {
+            this.setVisible(false);
+            dispose();
+            viewPresenter.moveToMyView();
+        } else {
+            this.setVisible(false);
+            dispose();
+            viewPresenter.moveToLoginView();
+        }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_myblogButtonActionPerformed
+    // 테이블에 있는 목록 클릭 시
+    private void postTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postTableMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        int row = postTable.getSelectedRow();
+        Post selectedPost = posts.get(row);
+
+        this.setVisible(false);
+        dispose();
+        viewPresenter.moveToCheckPostView(selectedPost);
+    }//GEN-LAST:event_postTableMouseClicked
+
+    private void logButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logButtonActionPerformed
+        String state = evt.getActionCommand();
+        if (state.equals("로그인")) {
+            this.setVisible(false);
+            dispose();
+            viewPresenter.moveToLoginView();
+        } else {
+            boolean success = userPresenter.logOut();
+
+            if (success) {
+                UserSession.setSession("");
+                String userID = UserSession.getSession();
+                this.setVisible(false);
+                dispose();
+                viewPresenter.moveToMainView(userID);
+            }
+        }
+    }//GEN-LAST:event_logButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel contentPanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JButton logButton;
     private javax.swing.JButton loginButton;
-    private javax.swing.JButton logoutButton;
     private javax.swing.JPanel menuPanel;
     private javax.swing.JButton myblogButton;
+    private javax.swing.JScrollPane postScrollPane;
+    private javax.swing.JTable postTable;
     private javax.swing.JButton postpageButton;
     private javax.swing.JTextField searchBox;
     private javax.swing.JButton searchButton;
-    private javax.swing.JLabel userid;
+    private javax.swing.JLabel useridLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,8 +1,10 @@
 package deu.cse.blog.Presenter;
 
+import deu.cse.blog.Model.Post;
 import deu.cse.blog.Model.Service.PostService;
+import deu.cse.blog.View.UserSession;
+import java.util.ArrayList;
 import java.util.List;
-import org.json.simple.JSONObject;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -19,62 +21,46 @@ public class PostPresenter {
     public PostPresenter() {
         postService = new PostService();
     }
-    public boolean save(String title, String post) {
-        if (title.equals("") && post.equals("")) {
-            return false;
-        } else {
-            postService.createPost(title, post);           
-        }
-        return true;
-    }
-    
-    public boolean update(String title, String post, String time) {
-        if (title.equals("") && post.equals("")) {
-            return false;
-        } else {
-            postService.updatePost(title, post, time);           
-        }
-        return true;
-    }
-    
-    public boolean delete(String title, String post, String time) {
-        postService.deletePost(title, post, time);
-        return true;
-    }
-    
-    public String loadPost(String title, String user, String time) {
 
-        return postService.findPost(title, user, time);
-    }
-    public List<String> getLatestPost() {
-        List<String> list = postService.getLatestPost();
-        return list;
-    }
-    
-    public List<String> getMorePost() {
-        List<String> list = postService.getMorePost();
-        return list;
-    }
-    
-    public String[] getMyPost() {
-        List<String> list = postService.getMyPost();
-        String[] stringList = new String[list.size()];
-        int i = 0;
-        for (String string : list) {
-            stringList[i] = string;
-            i++;
+     public Boolean register(String title, String content, String author) {
+        if (title.equals("") && content.equals("")) {
+            return false;
+        } else {
+            Boolean result = postService.add(title, content, author);  
+            return result;
         }
+    }
+    
+    public boolean update(String title, String content, String author, String postID) {
+        if (title.equals("") && content.equals("")) {
+            return false;
+        } else {
+            postService.updatePost(title, content, author, postID);           
+        }
+        return true;
+    }
+    
+    public boolean delete(String postID) {
+        return postService.delete(postID);
+    }
+    
+    public ArrayList<Post> deleteByName(String name) {
+        return postService.deleteByUserId(name);
+    }
+    
+    public ArrayList<Post> getMyPost() {
+        String name = UserSession.getSession();
+        ArrayList<Post> result = postService.findPostByName(name);
         
-        return stringList;
+        return result;
     }
     
-    public String[] getResultPost(String search) {
-        List<String> list = postService.getResultPost(search);
-        String[] titles = new String[list.size()];
-        int i = 0;
-        for (String title : list) {
-            titles[i] = title;
-        }
-        return titles;
-    }   
+    public ArrayList<Post> getResultPost(String search) {
+        return postService.getResultPost(search);
+    }
+    
+    public ArrayList<Post> findAll() {
+        ArrayList<Post> result = postService.findAll();
+        return result;
+    }
 }

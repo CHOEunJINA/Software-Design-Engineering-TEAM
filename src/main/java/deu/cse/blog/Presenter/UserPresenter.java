@@ -5,6 +5,7 @@
 package deu.cse.blog.Presenter;
 
 import deu.cse.blog.Model.Service.UserService;
+import deu.cse.blog.Model.User;
 import org.json.simple.JSONObject;
 
 /**
@@ -31,23 +32,20 @@ public class UserPresenter {
 
     public String loginUser(String id, String password) {
 
-        Boolean result = userService.login(id, password);
+        User result = userService.login(id, password);
 
-        if (result == true) {
-            return id;
-        } else {
+        if (result == null) {
             return null;
-        }
-
+        } 
+        return result.getName();
     }
     
-    public JSONObject loadUserInfo() {
+    public User loadUserInfo() {
         return userService.loadUserInfo();
     }
     
-    public boolean updateUser(String id, String password, String gender) {
-        userService.updateUser(id, password, gender);
-        return true;
+    public boolean updateUser(String id, String password, String gender, String name) {    
+        return userService.updateUser(id, password, gender, name);
     }
     
     public boolean deleteUser() {
