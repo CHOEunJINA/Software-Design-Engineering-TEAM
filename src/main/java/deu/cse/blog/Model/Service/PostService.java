@@ -7,12 +7,7 @@ package deu.cse.blog.Model.Service;
 import deu.cse.blog.Model.Post;
 import deu.cse.blog.Model.Repository.PostRepository;
 import deu.cse.blog.Model.Repository.UserRepository;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 /**
  *
@@ -65,16 +60,15 @@ public class PostService {
     }
     
     public ArrayList<Post> findPostByName(String name) {
-        JSONArray jsonArr = postRepository_.getPostArray();
         ArrayList<Post> list = postRepository_.findPostByName(name);
 
         return list;
     }
-    
+    // 검색 결과 찾기
     public ArrayList<Post> getResultPost(String search) {
         return postRepository_.findPostBySearch(search);
     }
-    
+    // 모든 게시물 찾기
     public ArrayList<Post> findAll() {
 
         ArrayList<Post> target = postRepository_.findAll();

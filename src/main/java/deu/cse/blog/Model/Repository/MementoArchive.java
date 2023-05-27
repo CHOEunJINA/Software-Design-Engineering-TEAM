@@ -5,15 +5,15 @@
 package deu.cse.blog.Model.Repository;
 
 import deu.cse.blog.Model.Memento;
+import deu.cse.blog.Model.Service.MementoArchiveIterator;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
- * 
- * @author bluev
+ * 메멘토 패턴의 caretaker, 이터레이터 패턴의 집합체 클래스
+ * @author 강대한
  */
-public class MementoArchive {
+public class MementoArchive implements Aggregate {
     private List<Memento> mementoList = new ArrayList<Memento>(); //저장된 글 데이터 집합
     
     public MementoArchive() {
@@ -24,12 +24,8 @@ public class MementoArchive {
         mementoList.add(index, state);
     }
     
-    public Memento getMemento(int index) {
-        return mementoList.get(index);
+    @Override
+    public MementoArchiveIterator iterator() { //집합체를 가진 이터레이터 반환
+        return new MementoArchiveIterator(mementoList);
     }
-    
-    public int getLength() {
-        return mementoList.size();
-    }
-    
 }

@@ -6,16 +6,15 @@
 package deu.cse.blog.View;
 
 import deu.cse.blog.Presenter.UserPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.ViewManager;
 import javax.swing.JOptionPane;
-import deu.cse.blog.View.MainView;
 
 /**
  *
  * @author 조은진
  */
 public class LoginView extends javax.swing.JFrame {
-    private ViewPresenter viewPresenter = new ViewPresenter();
+
     public String result;
 
     /**
@@ -171,31 +170,34 @@ public class LoginView extends javax.swing.JFrame {
         result = userpresenter.loginUser(id.trim(), pw.trim());
 
         if (result != null) {
-            UserSession.setSession(result);
+            UserSession.setSession(result); //로그인 정보 저장
             JOptionPane.showMessageDialog(getContentPane(), "로그인에 성공하였습니다.");
             setVisible(false);
             dispose();
-            viewPresenter.moveToMainView(result);
+            ViewManager.moveToMainView(result);
 
         } else {
             JOptionPane.showMessageDialog(getContentPane(), "로그인에 실패하였습니다.");
             setVisible(false);
             dispose();
-            viewPresenter.moveToLoginView();
+            ViewManager.moveToLoginView();
         }
     }//GEN-LAST:event_signInButtonMouseClicked
     // 블로그 홈 버튼 클릭 시
     private void mainPageButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainPageButtonMouseClicked
         // TODO add your handling code here:
-        new MainView();
+        String name = UserSession.getSession();
         setVisible(false);
+        dispose();
+        ViewManager.moveToMainView(name);
 
     }//GEN-LAST:event_mainPageButtonMouseClicked
     // 회원가입 버튼 클릭 시
     private void signUpButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signUpButtonMouseClicked
         // TODO add your handling code here:
-        new SignUpView();
         setVisible(false);
+        dispose();
+        ViewManager.moveToSignUpView();
     }//GEN-LAST:event_signUpButtonMouseClicked
 
 

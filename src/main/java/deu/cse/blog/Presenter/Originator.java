@@ -5,15 +5,17 @@
 package deu.cse.blog.Presenter;
 
 import deu.cse.blog.Model.Memento;
+import deu.cse.blog.Model.Repository.MementoArchive;
 import deu.cse.blog.Model.Service.MementoArchiveIterator;
 
 /**
- * 글 내용 입출력을 관리
+ * 메멘토 패턴의 originator, undo, redo 관리
  * @author 강대한
  */
 public class Originator {
     private String state;
-    private MementoArchiveIterator mementoArchiveIterator = new MementoArchiveIterator();
+    // 집합체에 대한 이터레이터
+    private MementoArchiveIterator mementoArchiveIterator = new MementoArchive().iterator();
 
     public void setState(String state) { // 글 내용 저장
         this.state = state;

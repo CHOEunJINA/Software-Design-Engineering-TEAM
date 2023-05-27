@@ -8,10 +8,9 @@ package deu.cse.blog.View;
 import deu.cse.blog.Model.Post;
 import deu.cse.blog.Presenter.PostPresenter;
 import deu.cse.blog.Presenter.UserPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.ViewManager;
 import deu.cse.blog.Utils.DataParser;
 import deu.cse.blog.Utils.JTableSetting;
-import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
@@ -27,7 +26,6 @@ public class MainView extends javax.swing.JFrame {
     private String userID = UserSession.getSession();
     private PostPresenter postPresenter = new PostPresenter();
     private UserPresenter userPresenter = new UserPresenter();
-    private ViewPresenter viewPresenter = new ViewPresenter();
 
     /**
      * Creates new form MainView
@@ -37,7 +35,7 @@ public class MainView extends javax.swing.JFrame {
         layoutInit();
 
         setLocationRelativeTo(null); // 중앙 정렬
-
+        //로그인되어있지 않을시 내블로그 버튼 보이지 않도록
         myblogButton.setVisible(false);
         myblogButton.setEnabled(false);
         
@@ -49,6 +47,7 @@ public class MainView extends javax.swing.JFrame {
         layoutInit();
 
         setLocationRelativeTo(null); // 중앙 정렬
+        //로그인되어있을시 내블로그 버튼 보이도록
         myblogButton.setVisible(true);
         myblogButton.setEnabled(true);
         useridLabel.setText(userID + "님");
@@ -218,14 +217,14 @@ public class MainView extends javax.swing.JFrame {
     // 글쓰기 버튼 클릭 시
     private void postpageButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_postpageButtonMouseClicked
 
-        if (userID == null) {
+        if (userID.equals("")) {
             this.setVisible(false);
             dispose();
-            viewPresenter.moveToLoginView();
+            ViewManager.moveToLoginView();
         } else {
             this.setVisible(false);
             dispose();
-            viewPresenter.moveToPostWriteView();
+            ViewManager.moveToPostWriteView();
         }
     }//GEN-LAST:event_postpageButtonMouseClicked
     // 로그인 버튼 클릭 시
@@ -237,20 +236,20 @@ public class MainView extends javax.swing.JFrame {
         String text = searchBox.getText();
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToSearchView(text);
+        ViewManager.moveToSearchView(text);
     }//GEN-LAST:event_searchButtonMouseClicked
 
     // 내블로그 버튼 클릭 시
     private void myblogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myblogButtonActionPerformed
         // TODO add your handling code here:
-        if (userID != null) {
+        if (userID != null) { 
             this.setVisible(false);
             dispose();
-            viewPresenter.moveToMyView();
-        } else {
+            ViewManager.moveToMyView();
+        } else { //로그인되어있지 않을시
             this.setVisible(false);
             dispose();
-            viewPresenter.moveToLoginView();
+            ViewManager.moveToLoginView();
         }
 
     }//GEN-LAST:event_myblogButtonActionPerformed
@@ -262,15 +261,15 @@ public class MainView extends javax.swing.JFrame {
 
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToCheckPostView(selectedPost);
+        ViewManager.moveToCheckPostView(selectedPost);
     }//GEN-LAST:event_postTableMouseClicked
 
     private void logButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logButtonActionPerformed
         String state = evt.getActionCommand();
-        if (state.equals("로그인")) {
+        if (state.equals("로그인")) { //로그인 정보 여부에 따라 보이는 버튼 이름을 다르게 해놓음
             this.setVisible(false);
             dispose();
-            viewPresenter.moveToLoginView();
+            ViewManager.moveToLoginView();
         } else {
             boolean success = userPresenter.logOut();
 
@@ -279,7 +278,7 @@ public class MainView extends javax.swing.JFrame {
                 String userID = UserSession.getSession();
                 this.setVisible(false);
                 dispose();
-                viewPresenter.moveToMainView(userID);
+                ViewManager.moveToMainView(userID);
             }
         }
     }//GEN-LAST:event_logButtonActionPerformed

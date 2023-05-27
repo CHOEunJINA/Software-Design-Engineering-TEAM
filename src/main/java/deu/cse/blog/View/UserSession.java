@@ -6,7 +6,7 @@
 package deu.cse.blog.View;
 
 /**
- * 로그인 한 userId를 받아와 세션으로 저장하는 클래스
+ * 로그인 한 유저 이름을 받아와 세션으로 저장하는 클래스
  * @author 조은진
  */
 public class UserSession {

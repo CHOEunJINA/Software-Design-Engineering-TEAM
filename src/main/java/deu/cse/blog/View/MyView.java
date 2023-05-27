@@ -3,11 +3,10 @@ package deu.cse.blog.View;
 import deu.cse.blog.Model.Post;
 import deu.cse.blog.Presenter.UserPresenter;
 import deu.cse.blog.Presenter.PostPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.ViewManager;
 import deu.cse.blog.Utils.DataParser;
 import deu.cse.blog.Utils.JTableSetting;
 import java.util.ArrayList;
-import javax.swing.JList;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -22,8 +21,6 @@ public class MyView extends javax.swing.JFrame {
 
     private UserPresenter userPresenter = new UserPresenter();
     private PostPresenter postPresenter = new PostPresenter();
-    private ViewPresenter viewPresenter = new ViewPresenter();
-    private JList list;
     private String user = UserSession.getSession();
     private ArrayList<Post> posts;
 
@@ -198,7 +195,7 @@ public class MyView extends javax.swing.JFrame {
 
         setVisible(false);
         dispose();
-        viewPresenter.moveToMainView(user);
+        ViewManager.moveToMainView(user);
     }//GEN-LAST:event_mainViewButtonActionPerformed
     
     private void myPostTableMouseClicked(java.awt.event.MouseEvent evt) {                                       
@@ -208,19 +205,19 @@ public class MyView extends javax.swing.JFrame {
 
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToMyPostView(selectedPost);
+        ViewManager.moveToMyPostView(selectedPost);
     }  
-
+    //회원 탈퇴
     private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToDeleteInfoView();
+        ViewManager.moveToDeleteInfoView();
     }//GEN-LAST:event_deleteUserButtonActionPerformed
-
+    //회원 정보 수정
     private void userInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userInfoButtonActionPerformed
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToMyInfoView();
+        ViewManager.moveToMyInfoView();
     }//GEN-LAST:event_userInfoButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
@@ -231,7 +228,7 @@ public class MyView extends javax.swing.JFrame {
             String userID = UserSession.getSession();
             this.setVisible(false);
             dispose();
-            viewPresenter.moveToMainView(userID);
+            ViewManager.moveToMainView(userID);
         }
     }//GEN-LAST:event_logOutButtonActionPerformed
 

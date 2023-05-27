@@ -18,35 +18,25 @@ import org.json.simple.parser.ParseException;
  * @author 강대한
  */
 public class FileManager {
-
-    private static String file;
-    private static String postFile = "src\\main\\java\\deu\\cse\\blog\\Data\\post.json"; // 작성된 글 데이터
-    private static String userFile = "src\\main\\java\\deu\\cse\\blog\\Data\\user.json"; // 유저 데이터
-    private static String commentFile = "src\\main\\java\\deu\\cse\\blog\\Data\\comment.json"; // 댓글 데이터
+    //싱글턴 패턴을 적용하여 객체를 하나만 생성되게 객체를 이른 초기화로 생성
     private static FileManager fileManager_ = new FileManager();
-
+    
+    //외부에서 생성자에 접근 못하게 한다.
     private FileManager() {
     }
-
-    public static FileManager fileManager() { //싱글턴 패턴을 적용하여 객체를 하나만 생성되게 생성자를 private으로 해두고 객체를 이른 초기화로 생성, 정적 메서드를 통해 객체 반환
+    
+    //정적 메서드를 통해 객체 반환
+    public static FileManager fileManager() { 
         return fileManager_;
     }
-
-    public static JSONArray get(String fileType) throws IOException, ParseException {
-        // 어떤 파일에 접근할지 결정
-        if (fileType.equals("postFile")) {
-            file = postFile;
-        } else if (fileType.equals("commentFile")) {
-            file = commentFile;
-        } else if (fileType.equals("userFile")) {
-            file = userFile;
-        }
+    // 요청온 데이터 경로의 데이터 출력
+    public static JSONArray get(String fileRoute) throws IOException, ParseException {
 
         Object obj = new Object();
         JSONParser parser = new JSONParser();
         JSONArray jsonArr = new JSONArray();
         try {
-            FileReader reader = new FileReader(file, Charset.forName("utf-8"));
+            FileReader reader = new FileReader(fileRoute, Charset.forName("utf-8"));
             obj = parser.parse(reader);
             jsonArr = (JSONArray) obj;
             reader.close();
@@ -57,19 +47,11 @@ public class FileManager {
         }
         return jsonArr;
     }
-
-    public static void set(String fileType, JSONArray jsonArr) throws IOException, ParseException {
-        // 어떤 파일에 접근할지 결정
-        if (fileType.equals("postFile")) {
-            file = postFile;
-        } else if (fileType.equals("commentFile")) {
-            file = commentFile;
-        } else if (fileType.equals("userFile")) {
-            file = userFile;
-        }
+    // 요청온 데이터 경로에 데이터 입력
+    public static void set(String fileRoute, JSONArray jsonArr) throws IOException, ParseException {
         
         try {
-            FileWriter writer = new FileWriter(file, Charset.forName("utf-8"));
+            FileWriter writer = new FileWriter(fileRoute, Charset.forName("utf-8"));
             writer.write(jsonArr.toJSONString());
             writer.flush();
             writer.close();

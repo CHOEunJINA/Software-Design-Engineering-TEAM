@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package deu.cse.blog.Presenter;
+package deu.cse.blog.Utils;
 
 import deu.cse.blog.Model.Post;
 import deu.cse.blog.View.*;
@@ -11,56 +11,49 @@ import deu.cse.blog.View.*;
  *
  * @author 강대한
  */
-public class ViewPresenter {
-
-    public ViewPresenter() {
-    }
+public class ViewManager {
     
-    public void moveToMainView() {  
-        
-    }
-    
-    public void moveToMainView(String userID) {
-        if (userID.equals("")) {
+    public static void moveToMainView(String userID) {
+        if (userID.equals("")) { 
             new MainView();
-        } else {
+        } else { //로그인되었을 때
             new MainView(userID);
         }    
     }
     
-    public void moveToMyView() {
+    public static void moveToMyView() {
         new MyView();
     }
     
-    public void moveToLoginView() {
+    public static void moveToLoginView() {
         new LoginView();
     }
     
-    public void moveToSignUpView() {
+    public static void moveToSignUpView() {
         new SignUpView();
     }
     
-    public void moveToPostWriteView() {
+    public static void moveToPostWriteView() {
         new PostWriteView();
     }
     
-    public void moveToMyPostView(Post selectedPost)  {
+    public static void moveToMyPostView(Post selectedPost)  {
         new MyPostView(selectedPost);
     }
     
-    public void moveToCheckPostView(Post selectedPost) {
+    public static void moveToCheckPostView(Post selectedPost) {
         new CheckPostView(selectedPost);
     }
     
-    public void moveToSearchView(String search) {
+    public static void moveToSearchView(String search) {
         new SearchView(search);
     }
     
-    public void moveToMyInfoView() {
+    public static void moveToMyInfoView() {
         new MyInfoView();
     }
     
-    public void moveToDeleteInfoView() {
+    public static void moveToDeleteInfoView() {
         new DeleteInfoView();
     }
 }

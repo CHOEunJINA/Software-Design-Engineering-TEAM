@@ -6,7 +6,7 @@ package deu.cse.blog.View;
 
 import deu.cse.blog.Model.User;
 import deu.cse.blog.Presenter.UserPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.ViewManager;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,7 +16,6 @@ import javax.swing.JOptionPane;
 public class MyInfoView extends javax.swing.JFrame {
 
     private UserPresenter userPresenter = new UserPresenter();
-    private ViewPresenter viewPresenter = new ViewPresenter();
     private String name;
     private String id;
     private String gender;
@@ -85,7 +84,7 @@ public class MyInfoView extends javax.swing.JFrame {
             }
         });
 
-        updateInfoButton.setText("가입");
+        updateInfoButton.setText("수정");
         updateInfoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateInfoButtonActionPerformed(evt);
@@ -179,7 +178,7 @@ public class MyInfoView extends javax.swing.JFrame {
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToMyView();
+        ViewManager.moveToMyView();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void updateInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateInfoButtonActionPerformed
@@ -192,6 +191,7 @@ public class MyInfoView extends javax.swing.JFrame {
         } else {
             gender = femaleRadioButton.getText(); // 여성
         }
+        // 입력이 제대로 들어왔는지 확인
         if (pwd.equals(pwdConfirmed) && !pwd.equals("") && !name.equals("")) {
             
             boolean success = userPresenter.updateUser(id, pwd, gender, name); // 유저 정보 수정
@@ -200,7 +200,7 @@ public class MyInfoView extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(getContentPane(), "수정 완료!");
                 this.setVisible(false);
                 dispose();
-                viewPresenter.moveToMyView();
+                ViewManager.moveToMyView();
             } else {
                 JOptionPane.showMessageDialog(getContentPane(), "수정 실패!");
             }

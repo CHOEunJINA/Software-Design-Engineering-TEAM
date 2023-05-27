@@ -156,7 +156,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="updateInfoButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&#xac00;&#xc785;"/>
+            <Property name="text" type="java.lang.String" value="&#xc218;&#xc815;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateInfoButtonActionPerformed"/>

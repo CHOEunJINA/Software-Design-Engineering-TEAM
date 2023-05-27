@@ -7,8 +7,7 @@ package deu.cse.blog.View;
 import deu.cse.blog.Model.Post;
 import deu.cse.blog.Presenter.Originator;
 import deu.cse.blog.Presenter.PostPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
-import java.util.ArrayList;
+import deu.cse.blog.Utils.ViewManager;
 import java.util.TimerTask;
 import java.util.Timer;
 import javax.swing.JOptionPane;
@@ -19,9 +18,7 @@ import javax.swing.JOptionPane;
  */
 public class MyPostView extends javax.swing.JFrame {
 
-    private ArrayList<Post> posts;
     private PostPresenter postPresenter = new PostPresenter();
-    private ViewPresenter viewPresenter = new ViewPresenter();
     private Originator originator = new Originator();
     private boolean isUndo;
     private String title;
@@ -42,10 +39,11 @@ public class MyPostView extends javax.swing.JFrame {
         title = selectedPost.getTitle();
         content = selectedPost.getContent();
         originator.setState(state);
-        Timer m = new Timer();
+        
         initComponents();
         setLocationRelativeTo(null); // 중앙 정렬
         setVisible(true);
+        Timer m = new Timer();
         TimerTask task = new TimerTask() { // 글의 내용이 바뀌어질 때 마다 글 내용 저장
             @Override
             public void run() {
@@ -55,7 +53,7 @@ public class MyPostView extends javax.swing.JFrame {
                 }
             }
         };
-        m.schedule(task, 1000, 3000); // 3초 마다 작업 실행
+        m.schedule(task, 1000, 5000); // 5초 마다 작업 실행
     }
 
     /**
@@ -203,7 +201,7 @@ public class MyPostView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getContentPane(), "수정 완료!");
             this.setVisible(false);
             dispose();
-            viewPresenter.moveToMyView();
+            ViewManager.moveToMyView();
         }
     }//GEN-LAST:event_updatePostButtonActionPerformed
 
@@ -226,14 +224,14 @@ public class MyPostView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getContentPane(), "삭제 완료!");
             this.setVisible(false);
             dispose();
-            viewPresenter.moveToMyView();
+            ViewManager.moveToMyView();
         }
     }//GEN-LAST:event_deletePostButtonActionPerformed
 
     private void myViewButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_myViewButtonMouseClicked
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToMyView();
+        ViewManager.moveToMyView();
     }//GEN-LAST:event_myViewButtonMouseClicked
 
 

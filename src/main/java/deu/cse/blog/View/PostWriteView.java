@@ -7,7 +7,7 @@ package deu.cse.blog.View;
 
 import deu.cse.blog.Presenter.Originator;
 import deu.cse.blog.Presenter.PostPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.ViewManager;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JOptionPane;
@@ -23,7 +23,6 @@ public class PostWriteView extends javax.swing.JFrame {
     private String content;
 
     private PostPresenter postPresenter = new PostPresenter();
-    private ViewPresenter viewPresenter = new ViewPresenter();
     private Originator originator = new Originator();
     private boolean isUndo;
     private String state = "";
@@ -34,7 +33,7 @@ public class PostWriteView extends javax.swing.JFrame {
     public PostWriteView() {
         initComponents();
         setLocationRelativeTo(null); // 중앙 정렬
-
+        setVisible(true);
         Timer m = new Timer();
         TimerTask task = new TimerTask() {
 
@@ -50,7 +49,7 @@ public class PostWriteView extends javax.swing.JFrame {
         };
 
         m.schedule(task, 1000, 5000); // 5초 단위로 저장됨
-        setVisible(true);
+        
     }
 
     /**
@@ -221,7 +220,7 @@ public class PostWriteView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getContentPane(), "글이 등록되었습니다.");
             setVisible(false);
             dispose();
-            viewPresenter.moveToMainView(author);
+            ViewManager.moveToMainView(author);
         } else {
             JOptionPane.showMessageDialog(getContentPane(), "글 등록에 실패하였습니다.");
         }
@@ -231,7 +230,7 @@ public class PostWriteView extends javax.swing.JFrame {
         // TODO add your handling code here:
         setVisible(false);
         dispose();
-        viewPresenter.moveToMainView(author);
+        ViewManager.moveToMainView(author);
 
 
     }//GEN-LAST:event_blogHomeMouseClicked

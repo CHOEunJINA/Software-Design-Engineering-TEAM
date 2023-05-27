@@ -7,11 +7,6 @@ package deu.cse.blog.Model.Service;
 
 import deu.cse.blog.Model.Repository.UserRepository;
 import deu.cse.blog.Model.User;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 /**
  *
@@ -65,38 +60,24 @@ public class UserService {
     }
     
     public boolean logOut() {
-        userRepository_.setUser("");
+        userRepository_.setUser(""); //로그인 정보 초기화
         if (userRepository_.getUser().equals("")) {
             return true;
         } else {
             return false;
         }
     }
-    
+    //로그인된 유저 정보 삭제
     public boolean deleteUser() {
-        JSONArray jsonArr = userRepository_.getUserArray();
-        
-        int index = userRepository_.findIndex();
-        JSONArray newJsonArr = new JSONArray();
-        int i = 0;
-        for (Object obj : jsonArr) {
-            JSONObject jsonObj = (JSONObject) obj;
-            if (i == index) {
-                i++;
-                continue;
-            }
-            newJsonArr.add(jsonObj);
-            i++;
-        }
         boolean success = userRepository_.delete();
         return success;
     }
-    
+    //로그인된 유저 정보 가져옴
     public User loadUserInfo() {
         String name = userRepository_.getUser();
         return userRepository_.findByName(name);
     }
-    
+    //회원 정보 수정
     public boolean updateUser(String id, String password, String gender, String name) {
         User user = new User.Builder()
                 .userId(id)
@@ -107,8 +88,5 @@ public class UserService {
         
         return userRepository_.update(user, name);
     }
-    
-    public String currentUser() {
-        return userRepository_.getUser();
-    }
+
 }

@@ -6,7 +6,7 @@ package deu.cse.blog.View;
 
 import deu.cse.blog.Model.Post;
 import deu.cse.blog.Presenter.PostPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.ViewManager;
 import deu.cse.blog.Utils.DataParser;
 import deu.cse.blog.Utils.JTableSetting;
 import java.awt.Color;
@@ -15,11 +15,10 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author bluev
+ * @author 강대한
  */
 public class SearchView extends javax.swing.JFrame {
     private PostPresenter postPresenter = new PostPresenter();
-    private ViewPresenter viewPresenter = new ViewPresenter();
     private String search;
     private ArrayList<Post> posts;
     /**
@@ -161,21 +160,21 @@ public class SearchView extends javax.swing.JFrame {
 
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToCheckPostView(selectedPost);
+        ViewManager.moveToCheckPostView(selectedPost);
     }//GEN-LAST:event_resultTableMouseClicked
 
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
         String text = searchBox.getText();
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToSearchView(text);
+        ViewManager.moveToSearchView(text);
     }//GEN-LAST:event_searchButtonMouseClicked
 
     private void mainViewButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainViewButtonMouseClicked
         String userID = UserSession.getSession();
         setVisible(false);
         dispose();
-        viewPresenter.moveToMainView(userID);
+        ViewManager.moveToMainView(userID);
     }//GEN-LAST:event_mainViewButtonMouseClicked
 
 

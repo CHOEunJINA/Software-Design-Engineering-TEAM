@@ -6,7 +6,7 @@
 package deu.cse.blog.View;
 
 import deu.cse.blog.Presenter.UserPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.ViewManager;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
  * @author 조은진
  */
 public class SignUpView extends javax.swing.JFrame {
-    private ViewPresenter viewPresenter = new ViewPresenter();
     /**
      * Creates new form SignUpView1
      */
@@ -224,7 +223,7 @@ public class SignUpView extends javax.swing.JFrame {
         String userID = UserSession.getSession();
         setVisible(false);
         dispose();
-        viewPresenter.moveToMainView(userID);
+        ViewManager.moveToMainView(userID);
     }//GEN-LAST:event_mainPageButtonMouseClicked
 
     // 회원가입 버튼 클릭 시
@@ -242,6 +241,7 @@ public class SignUpView extends javax.swing.JFrame {
             gender = "여성";
         }
         UserPresenter userpresenter = new UserPresenter();
+        //정보 입력이 제대로 되어있는지 확인
         if (!id.equals("") && !name.equals("") && !pw.equals("")) {
             result = userpresenter.registerUser(id.trim(), name.trim(), pw.trim(), pwConfirm.trim(), gender);
         }
@@ -251,12 +251,12 @@ public class SignUpView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getContentPane(), "회원가입에 성공하였습니다.");
             setVisible(false);
             dispose();
-            viewPresenter.moveToLoginView();
+            ViewManager.moveToLoginView();
         } else {
             JOptionPane.showMessageDialog(getContentPane(), "회원가입에 실패하였습니다.");
             setVisible(false);
             dispose();
-            viewPresenter.moveToSignUpView();
+            ViewManager.moveToSignUpView();
         }
     }//GEN-LAST:event_signUpButtonMouseClicked
     // 뒤로가기 버튼 클릭 시
@@ -264,7 +264,7 @@ public class SignUpView extends javax.swing.JFrame {
         // TODO add your handling code here:
         setVisible(false);
         dispose();
-        viewPresenter.moveToLoginView();
+        ViewManager.moveToLoginView();
     }//GEN-LAST:event_cancelButtonMouseClicked
 
 

@@ -26,13 +26,12 @@ public class Post {
 
     public Post(Builder builder) {
         if(builder.postId == null){
-            this.postId= UUID.randomUUID().toString();
+            this.postId= UUID.randomUUID().toString(); // 랜덤으로 고유 식별자 생성
         } else {
             this.postId = builder.postId;
         }
         
-        this.title = builder.title;
-        
+        this.title = builder.title;    
         this.content = builder.content;
         this.author = builder.author;
 
@@ -88,8 +87,6 @@ public class Post {
             this.author = author;
             return this;
         }
-
-
     }
 
     //Post를 파일에 저장하기 위해 JSON형태로 바꾸는 메소드

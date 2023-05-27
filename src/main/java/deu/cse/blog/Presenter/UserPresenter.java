@@ -6,7 +6,6 @@ package deu.cse.blog.Presenter;
 
 import deu.cse.blog.Model.Service.UserService;
 import deu.cse.blog.Model.User;
-import org.json.simple.JSONObject;
 
 /**
  * @author 강대한
@@ -57,7 +56,4 @@ public class UserPresenter {
         return userService.logOut();
     }
     
-    public String getCurrentUser() {
-        return userService.currentUser();
-    }
 }

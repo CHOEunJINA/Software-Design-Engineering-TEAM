@@ -8,13 +8,12 @@ package deu.cse.blog.View;
 import deu.cse.blog.Model.Comment;
 import deu.cse.blog.Model.Post;
 import deu.cse.blog.Presenter.CommentPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.ViewManager;
 import deu.cse.blog.Utils.DataParser;
 import deu.cse.blog.Utils.JTableSetting;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -23,12 +22,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class CheckPostView extends javax.swing.JFrame {
 
-    private JScrollPane scrollPane = new JScrollPane();
     private Post selectedPost;
     private String userID = UserSession.getSession();
     private String postID;
     private CommentPresenter commentPresenter = new CommentPresenter();
-    private ViewPresenter viewPresenter = new ViewPresenter();
 
     /**
      * Creates new form CheckPostView
@@ -37,13 +34,11 @@ public class CheckPostView extends javax.swing.JFrame {
     }
 
     public CheckPostView(Post selectedPost) {
-
-        setLocationRelativeTo(null); // 중앙 정렬
-
         this.selectedPost = selectedPost;
         postID = selectedPost.getPostId();
 
         initComponents();
+        setLocationRelativeTo(null); // 중앙 정렬
         setVisible(true);
     }
 
@@ -219,22 +214,23 @@ public class CheckPostView extends javax.swing.JFrame {
         // TODO add your handling code here:
         setVisible(false);
         dispose();
-        viewPresenter.moveToMainView(userID);
+        ViewManager.moveToMainView(userID);
     }//GEN-LAST:event_blogHomeButtonMouseClicked
 
     // 댓글 등록하기 버튼 클릭 시
     private void commentButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_commentButtonMouseClicked
         // TODO add your handling code here:
-        if (userID.equals("")) {
+        if (userID.equals("")) { //로그인되어있지 않으면
             JOptionPane.showMessageDialog(getContentPane(), "로그인을 해주세요!");
             setVisible(false);
             dispose();
-            viewPresenter.moveToLoginView();
+            ViewManager.moveToLoginView();
         } else {
             String content = commentArea.getText();
             Boolean result = commentPresenter.register(postID, content, userID);
             if (result) {
-                commentArea.setText("");
+                JOptionPane.showMessageDialog(getContentPane(), "등록 완료!");
+                commentArea.setText(""); //댓글 입력창 초기화
                 JTableSetting.insertTableRow((DefaultTableModel) commentTable.getModel(), new Object[]{
                     userID, content
                 });

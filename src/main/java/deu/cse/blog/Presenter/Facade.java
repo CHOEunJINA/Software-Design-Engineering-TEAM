@@ -12,8 +12,8 @@ import deu.cse.blog.Model.Service.UserService;
 import java.util.ArrayList;
 
 /**
- *
- * @author 조은진 // Facade 클래스 구현
+ * Facade 클래스
+ * @author 조은진 
  */
 public class Facade {
 

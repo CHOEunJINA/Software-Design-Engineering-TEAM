@@ -7,7 +7,7 @@ package deu.cse.blog.View;
 
 import deu.cse.blog.Presenter.Facade;
 import deu.cse.blog.Presenter.UserPresenter;
-import deu.cse.blog.Presenter.ViewPresenter;
+import deu.cse.blog.Utils.ViewManager;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,7 +16,6 @@ import javax.swing.JOptionPane;
  */
 public class DeleteInfoView extends javax.swing.JFrame {
     private UserPresenter userPresenter = new UserPresenter();
-    private ViewPresenter viewPresenter = new ViewPresenter();
     private String currentUser = UserSession.getSession();
 
     /**
@@ -153,7 +152,7 @@ public class DeleteInfoView extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.setVisible(false);
         dispose();
-        viewPresenter.moveToMainView(currentUser);
+        ViewManager.moveToMainView(currentUser);
 
     }//GEN-LAST:event_cancelButtonMouseClicked
     // 회원 탈퇴 버튼 클릭 시
@@ -170,11 +169,11 @@ public class DeleteInfoView extends javax.swing.JFrame {
 
         if (result == true) {
             JOptionPane.showMessageDialog(getContentPane(), "회원 탈퇴가 되었습니다.");
-            UserSession.setSession("");
+            UserSession.setSession(""); //로그아웃
             currentUser = UserSession.getSession();
             this.setVisible(false);
             dispose();
-            viewPresenter.moveToMainView(currentUser);
+            ViewManager.moveToMainView(currentUser);
         } else if (result == false) {
             JOptionPane.showMessageDialog(getContentPane(), "아이디, 비밀번호를 확인해주세요.");
         }

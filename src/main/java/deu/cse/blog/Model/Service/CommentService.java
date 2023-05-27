@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class CommentService {
 
     private CommentRepository commentRepository_ = CommentRepository.getInstance();
-
+    //댓글 저장
     public Boolean add(String postId, String content, String author) {
 
         Comment comment = new Comment.Builder()
@@ -32,10 +32,10 @@ public class CommentService {
     }
     
     
-
+    // 식별자를 통해 삭제
     public String delete(String commentId) {
 
-        ArrayList target = commentRepository_.findByUserId(commentId);
+        Comment target = commentRepository_.deleteById(commentId);
 
         // commentId 검색한 결과가 없으면 null 리턴
         if (target == null) {
@@ -44,7 +44,7 @@ public class CommentService {
 
         return "success";
     }
-    
+    // 작성자를 통해 삭제
     public boolean deleteByUserId(String userId) {
 
         return commentRepository_.deleteByUserId(userId);
@@ -59,7 +59,7 @@ public class CommentService {
 
         Boolean target = commentRepository_.deleteByPostId(postId);
 
-        // commentId, postId로 검색한 결과가 없으면 null 리턴
+        //postId로 검색한 결과가 없으면 null 리턴
         if (target == null) {
             return "null";
         }
@@ -73,6 +73,7 @@ public class CommentService {
      * @param posts
      * @return
      */
+    //Overloading
     public Boolean deleteByPostId(ArrayList<Post> posts) {
 
         for (Post post : posts) {
@@ -83,7 +84,7 @@ public class CommentService {
 
     }
     
-    // postId를 통해 게시물의 댓글을 지움
+    // postId를 통해 게시물의 댓글 정보 가져옴
     public ArrayList<Comment> findByPostId(String postId) {
 
         ArrayList<Comment> target = commentRepository_.findByPostId(postId);

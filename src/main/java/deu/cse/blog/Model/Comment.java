@@ -25,7 +25,7 @@ public class Comment {
 
     public Comment(Builder builder) {
         if (builder.commentId == null) {
-            this.commentId = UUID.randomUUID().toString();
+            this.commentId = UUID.randomUUID().toString(); // 랜덤으로 고유 식별자 생성
         } else {
             this.commentId = builder.commentId;
         }

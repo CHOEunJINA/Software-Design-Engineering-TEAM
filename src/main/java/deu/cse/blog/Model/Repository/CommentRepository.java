@@ -16,15 +16,18 @@ import org.json.simple.parser.ParseException;
 /**
  *
  * @author 조은진 댓글 관리 - 싱글턴 패턴 적용
+ * 
  */
 public class CommentRepository {
-
+    //싱글턴 패턴을 적용하여 객체를 하나만 생성되게 객체를 이른 초기화로 생성
     private static CommentRepository commentRepository_ = new CommentRepository();
-
+    private static String commentFile = "./comment.json"; // 댓글 데이터
+    
+    //외부에서 생성자에 접근 못하게 한다
     private CommentRepository() {
     }
 
-    //싱글턴 패턴을 적용하여 객체를 하나만 생성되게 생성자를 private으로 해두고 객체를 이른 초기화로 생성, 정적 메서드를 통해 객체 반환
+    //정적 메서드를 통해 유일하게 생성된 객체 반환
     public static CommentRepository getInstance() {
         return commentRepository_;
     }
@@ -32,17 +35,17 @@ public class CommentRepository {
     //댓글 저장 메소드
     public Boolean save(Comment comment) {
         try {
-            JSONArray jsonArr = FileManager.get("commentFile");
+            JSONArray jsonArr = FileManager.get(commentFile);
 
             // JSONArray에 추가
             jsonArr.add(comment.toJson());
-            // JSON 데이터를 텍스트 파일에 저장
-            FileManager.set("commentFile", jsonArr);
+            // JSON 데이터를 파일에 저장
+            FileManager.set(commentFile, jsonArr);
 
             return true;
         } catch (IOException | ParseException e) {
             e.printStackTrace();
-            return false; // Boolean인데 null 던질 필요는 없음 ㅇㅇㅇ
+            return false; 
         }
     }
 
@@ -50,7 +53,7 @@ public class CommentRepository {
     public Comment deleteById(String commentId) {
         try {
             // 기존 파일 로드
-            JSONArray jsonArr = FileManager.get("commentFile");
+            JSONArray jsonArr = FileManager.get(commentFile);
 
             // JSONArray 다 돌면서 전달 받은 commentId 있는지 확인하는 것
             // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
@@ -61,14 +64,12 @@ public class CommentRepository {
                 // 읽어온 JSON이 Comment로 바뀜
                 Comment comment = Comment.toEntity(item);
 
-                // 전달 받은 commentId값이랑 postId 비교를 하는 것
-                // 전달받은 commentId와 postId에 해당하는 사용자가 있는 경우
                 if (comment.getCommentId().equals(commentId)) {
                     // 해당 사용자 정보 삭제
                     jsonArr.remove(iter.nextIndex() - 1);
 
-                    // JSON 데이터를 텍스트 파일에 저장
-                    FileManager.set("commentFile", jsonArr);
+                    // JSON 데이터를 파일에 저장
+                    FileManager.set(commentFile, jsonArr);
 
                     return comment;
                 }
@@ -81,16 +82,16 @@ public class CommentRepository {
         // id에 해당하는 사용자를 못 찾은 경우 null 리턴
         return null;
     }
-    
-    public boolean deleteByUserId(String userId) {
+    //유저 이름으로 댓글 삭제
+    public boolean deleteByUserId(String userID) {
         try {
             // 기존 파일 로드
-            JSONArray jsonArr = FileManager.get("commentFile");
+            JSONArray jsonArr = FileManager.get(commentFile);
             for (int i = jsonArr.size() - 1; i >= 0; i--) {
                 JSONObject item = (JSONObject) jsonArr.get(i);
                 Comment comment = Comment.toEntity(item);
 
-                if (comment.getAuthor().equals(userId)) {
+                if (comment.getAuthor().equals(userID)) {
    
                     jsonArr.remove(i);
                 }
@@ -98,7 +99,7 @@ public class CommentRepository {
             // JSONArray 다 돌면서 전달 받은 commentId 있는지 확인하는 것
             // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
             
-            FileManager.set("commentFile", jsonArr);
+            FileManager.set(commentFile, jsonArr);
             return true;
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -112,7 +113,7 @@ public class CommentRepository {
     public Boolean deleteByPostId(String postId) {
         try {
             // 기존 파일 로드
-            JSONArray jsonArrComment = FileManager.get("commentFile");
+            JSONArray jsonArrComment = FileManager.get(commentFile);
             // JSONArray 다 돌면서 전달 받은 commentId 있는지 확인하는 것
             // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
 
@@ -127,7 +128,7 @@ public class CommentRepository {
             }
 
             // JSON 데이터를 텍스트 파일에 저장
-            FileManager.set("commentFile", jsonArrComment);
+            FileManager.set(commentFile, jsonArrComment);
 
             return true;
         } catch (IOException | ParseException e) {
@@ -140,7 +141,7 @@ public class CommentRepository {
     public ArrayList findByUserId(String userId) {
         try {
             // 기존 파일 로드
-            JSONArray jsonArr = FileManager.get("commentFile");
+            JSONArray jsonArr = FileManager.get(commentFile);
 
             // JSONArray 다 돌면서 전달 받은 commentId 있는지 확인하는 것
             // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
@@ -172,7 +173,7 @@ public class CommentRepository {
     public ArrayList findByPostId(String postId) {
         try {
             // 기존 파일 로드
-            JSONArray jsonArr = FileManager.get("commentFile");
+            JSONArray jsonArr = FileManager.get(commentFile);
 
             // JSONArray 다 돌면서 전달 받은 commentId 있는지 확인하는 것
             // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
