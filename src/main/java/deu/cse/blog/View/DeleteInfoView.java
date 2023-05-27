@@ -5,7 +5,6 @@
  */
 package deu.cse.blog.View;
 
-import deu.cse.blog.Presenter.Facade;
 import deu.cse.blog.Presenter.UserPresenter;
 import deu.cse.blog.Utils.ViewManager;
 import javax.swing.JOptionPane;
@@ -160,10 +159,10 @@ public class DeleteInfoView extends javax.swing.JFrame {
         // TODO add your handling code here:
         String id = idField.getText();
         String pw = new String(pwField.getPassword());
-        Facade facade = new Facade();
+       
         Boolean result = false;
         if (id.equals(userPresenter.loadUserInfo().getUserId()) && pw.equals(userPresenter.loadUserInfo().getPassword())) {
-            result = facade.deleteUser(id);
+            result = userPresenter.signOut(id);
         }
         
 

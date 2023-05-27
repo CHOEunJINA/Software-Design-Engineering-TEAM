@@ -16,9 +16,11 @@ import deu.cse.blog.Model.User;
 public class UserPresenter {
 
     private UserService userService;
-
+    private Facade userFacade;
+    
     public UserPresenter() {
         this.userService = new UserService();
+        this.userFacade = new Facade();
     }
 
     public Boolean registerUser(String id, String name, String password, String passwordConfirm, String gender) {
@@ -29,6 +31,10 @@ public class UserPresenter {
 
     }
 
+    public Boolean signOut(String userId){
+        return this.userFacade.deleteUser(userId);
+    }
+    
     public String loginUser(String id, String password) {
 
         User result = userService.login(id, password);
