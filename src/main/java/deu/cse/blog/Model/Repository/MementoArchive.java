@@ -12,16 +12,13 @@ import java.util.List;
 /**
  * 메멘토 패턴의 caretaker, 이터레이터 패턴의 집합체 클래스
  * @author 강대한
+ * 2023.5.28 "집합체의 역할만 수행할 수 있게 add 메서드 제거" 강대한
  */
 public class MementoArchive implements Aggregate {
     private List<Memento> mementoList = new ArrayList<Memento>(); //저장된 글 데이터 집합
     
     public MementoArchive() {
         mementoList.add(new Memento(""));
-    }
-    
-    public void add(int index, Memento state) {
-        mementoList.add(index, state);
     }
     
     @Override

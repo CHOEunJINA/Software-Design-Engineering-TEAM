@@ -17,7 +17,6 @@ public class MementoArchiveIterator implements Iterator<Memento>{
     private int index = 0; //현재 상태 인덱스
     //집합체를 받아와 초기화
     public MementoArchiveIterator(List<Memento> mementoList) {
-        //mementoArchive = new MementoArchive();
         this.mementoList = mementoList; 
     }
     
