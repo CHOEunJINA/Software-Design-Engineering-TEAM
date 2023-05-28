@@ -22,14 +22,18 @@ public class UserRepository {
 
     private static String currentUser = ""; // 로그인된 유저 이름
     //싱글턴 패턴을 적용하여 객체를 하나만 생성되게 객체를 이른 초기화로 생성
-    private static UserRepository userRepository_ = new UserRepository(); 
+    private static UserRepository userRepository_ = new UserRepository();
     private static FileManager fileManager_ = FileManager.fileManager();
     private static String userFile = "./user.json"; // 유저 데이터
     //생성자를 외부에서 접근 못하도록
-    private UserRepository() { 
+
+    private UserRepository() {
+        System.out.println("userRepository 객체 생성");
     }
+
     //정적 메서드를 통해 객체 반환
-    public static UserRepository userRepository() { 
+    public static UserRepository userRepository() {
+        System.out.println("userRepository 객체 반환");
         return userRepository_;
     }
 
@@ -49,7 +53,7 @@ public class UserRepository {
             return true;
         } catch (IOException | ParseException e) {
             e.printStackTrace();
-            return false; 
+            return false;
         }
     }
 
@@ -88,6 +92,7 @@ public class UserRepository {
         }
         return null;
     }
+
     //유저 이름을 기준으로 정보 찾기
     public User findByName(String name) {
         try {
@@ -104,7 +109,6 @@ public class UserRepository {
                 //User user= new User().toEntity(item);
 
                 // 전달 받은 name값이랑 비교를 하는 것
-
                 if (user.getName().equals(name)) {
                     // 해당 사용자 정보 반환
                     return user;
@@ -160,43 +164,20 @@ public class UserRepository {
             // JSONArray에 저장되어 있는 애들을 이터레이터로 뽑아오는 것
             ListIterator iter = jsonArr.listIterator();
             // 유저 이름이 바뀌지 않았으면
-            if (!name.equals(currentUser)) {
-                // 이름이 중복되지 않았으면
-                if (findByName(name) == null) {
-                    while (iter.hasNext()) {
-                        JSONObject item = (JSONObject) iter.next();
-                        // 읽어온 JSON이 Post로 바뀜
-                        User user = User.toEntity(item);
-                        if (user.getName().equals(currentUser)) {
-                            // 해당 사용자 정보 삭제
-                            jsonArr.remove(iter.nextIndex() - 1);
-                            jsonArr.add(targetUser.toJson());
-                            // JSON 데이터를 텍스트 파일에 저장
-                            FileManager.set(userFile, jsonArr);
-                            currentUser = name;
-                            return true;
-                        } 
-
-                    }
-                } else { //이름 중복
-                    return false;
-                }
-            } else { //이름 변경 되지 않았음
-                while (iter.hasNext()) {
-                    JSONObject item = (JSONObject) iter.next();
-                    // 읽어온 JSON이 User로 바뀜
-                    User user = User.toEntity(item);
-                    if (user.getName().equals(name)) {
-                        // 해당 사용자 정보 삭제 후 새로운 정보 저장
-                        jsonArr.remove(iter.nextIndex() - 1);
-                        jsonArr.add(targetUser.toJson());
-                        // JSON 데이터를 파일에 저장
-                        FileManager.set(userFile, jsonArr);
-                        return true;
-                    } 
+            while (iter.hasNext()) {
+                JSONObject item = (JSONObject) iter.next();
+                // 읽어온 JSON이 Post로 바뀜
+                User user = User.toEntity(item);
+                if (user.getName().equals(currentUser)) {
+                    // 해당 사용자 정보 삭제
+                    jsonArr.remove(iter.nextIndex() - 1);
+                    jsonArr.add(targetUser.toJson());
+                    // JSON 데이터를 텍스트 파일에 저장
+                    FileManager.set(userFile, jsonArr);
+                    currentUser = "";
+                    return true;
                 }
             }
-            return false;
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

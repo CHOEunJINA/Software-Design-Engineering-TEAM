@@ -18,11 +18,13 @@ public class MementoArchive implements Aggregate {
     private List<Memento> mementoList = new ArrayList<Memento>(); //저장된 글 데이터 집합
     
     public MementoArchive() {
+        System.out.println("메멘토 리스트 생성");
         mementoList.add(new Memento(""));
     }
     
     @Override
     public MementoArchiveIterator iterator() { //집합체를 가진 이터레이터 반환
+        System.out.println("메멘토 리스트가 이터레이터 반환");
         return new MementoArchiveIterator(mementoList);
     }
 }

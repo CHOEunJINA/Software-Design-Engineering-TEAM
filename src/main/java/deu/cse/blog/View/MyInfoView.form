@@ -179,7 +179,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="nameField">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nameField.setText(name);"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nameField.setText(name);&#xa;nameField.setEditable(false);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="nameLabel">

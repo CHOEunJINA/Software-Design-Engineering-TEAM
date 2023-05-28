@@ -12,6 +12,7 @@ public class Memento {
     private String state; // 글 내용
     
     public Memento(String state) {
+        System.out.println(state + " 메멘토 객체 생성");
         this.state = state;
     }
     

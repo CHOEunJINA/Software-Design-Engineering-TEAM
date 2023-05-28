@@ -25,9 +25,11 @@ public class PostRepository {
     private static String postFile = "./post.json"; // 작성된 글 데이터
     //외부에서 생성자에 접근 못하게 한다
     private PostRepository() {
+        System.out.println("postRepository 객체 생성");
     }
     //정적 메서드를 통해 객체 반환
     public static PostRepository postRepository() {
+        System.out.println("postRepository 객체 반환");
         return postRepository_;
     }
 

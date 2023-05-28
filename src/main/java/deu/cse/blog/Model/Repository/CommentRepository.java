@@ -25,10 +25,12 @@ public class CommentRepository {
     
     //외부에서 생성자에 접근 못하게 한다
     private CommentRepository() {
+        System.out.println("commentRepository 객체 생성");
     }
 
     //정적 메서드를 통해 유일하게 생성된 객체 반환
     public static CommentRepository getInstance() {
+        System.out.println("commentRepository 객체 반환");
         return commentRepository_;
     }
 
@@ -198,7 +200,5 @@ public class CommentRepository {
             e.printStackTrace();
             return null;
         }
-
     }
-
 }

@@ -98,6 +98,7 @@ public class MyInfoView extends javax.swing.JFrame {
         confirmPasswordLabel.setText("비밀번호 확인");
 
         nameField.setText(name);
+        nameField.setEditable(false);
 
         nameLabel.setText("닉네임");
 
@@ -185,7 +186,6 @@ public class MyInfoView extends javax.swing.JFrame {
 
         String pwd = new String(passwordField.getPassword()).trim(); // 공백 제거
         String pwdConfirmed = new String(confirmPasswordField.getPassword()).trim();
-        String name = nameField.getText().trim();
         if (maleRadioButton.isSelected()) {
             gender = maleRadioButton.getText(); // 남성
         } else {
@@ -196,11 +196,11 @@ public class MyInfoView extends javax.swing.JFrame {
             
             boolean success = userPresenter.updateUser(id, pwd, gender, name); // 유저 정보 수정
             if (success) {
-                UserSession.setSession(name);
+                UserSession.setSession("");
                 JOptionPane.showMessageDialog(getContentPane(), "수정 완료!");
                 this.setVisible(false);
                 dispose();
-                ViewManager.moveToMyView();
+                ViewManager.moveToLoginView();
             } else {
                 JOptionPane.showMessageDialog(getContentPane(), "수정 실패!");
             }

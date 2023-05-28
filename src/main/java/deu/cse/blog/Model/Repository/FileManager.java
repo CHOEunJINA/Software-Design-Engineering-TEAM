@@ -23,10 +23,12 @@ public class FileManager {
     
     //외부에서 생성자에 접근 못하게 한다.
     private FileManager() {
+        System.out.println("fileManager 객체 생성");
     }
     
     //정적 메서드를 통해 객체 반환
     public static FileManager fileManager() { 
+        System.out.println("fileManager 객체 반환");
         return fileManager_;
     }
     // 요청온 데이터 경로의 데이터 출력

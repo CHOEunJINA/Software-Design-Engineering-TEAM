@@ -19,6 +19,7 @@ public class Originator {
 
     public void setState(String state) { // 글 내용 저장
         this.state = state;
+        System.out.println("현재 상태 : " + state);
         mementoArchiveIterator.add(saveStateToMemento());
     }
     
@@ -32,10 +33,12 @@ public class Originator {
     }
     
     public Memento saveStateToMemento() { // 글 내용을 메멘토 객체로 변환
+        System.out.println(state + " 를 메멘토 객체로 변환");
         return new Memento(state);
     }
     
     public void getStateFromMemento(Memento memento) {
+        System.out.println("메멘토 객체에서 " + state + " 를 가져옴");
         state = memento.getState();
     }
 }
